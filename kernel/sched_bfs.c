@@ -2201,8 +2201,7 @@ void wake_up_idle_cpu(int cpu);
  */
 void scheduler_tick(void)
 {
-	int cpu = smp_processor_id();
-	struct rq *rq = cpu_rq(cpu);
+	struct rq *rq = cpu_rq(smp_processor_id());
 
 	sched_clock_tick();
 	update_rq_clock(rq);
