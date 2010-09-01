@@ -953,7 +953,6 @@ lock_mm:
 	 * once */
 	if (PMEM_IS_SUBMAP(data) && !mm) {
 		pmem_unlock_data_and_mm(data, mm);
-		up_write(&data->sem);
 		goto lock_mm;
 	}
 	/* now check that vma.mm is still there, it could have been
@@ -1199,6 +1198,54 @@ static long pmem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		DLOG("connect\n");
 		return pmem_connect(arg, file);
 		break;
+
+	case PMEM_CACHE_FLUSH:
+		{
+			struct pmem_region region;
+			if (copy_from_user(&region, (void __user *)arg,
+						sizeof(struct pmem_region)))
+				return -EFAULT;
+			flush_pmem_file(file, region.offset, region.len);
+			break;
+		}
+	case PMEM_CLEAN_INV_CACHES:
+	case PMEM_CLEAN_CACHES:
+	case PMEM_INV_CACHES:
+		{
+			struct pmem_addr pmem_addr;
+			unsigned long vaddr;
+			unsigned long paddr;
+			unsigned long length;
+			unsigned long offset;
+
+			id = get_id(file);
+			if (!pmem[id].cached)
+				return 0;
+			if (!has_allocation(file))
+				return -EINVAL;
+			if (copy_from_user(&pmem_addr, (void __user *)arg,
+						sizeof(struct pmem_addr)))
+				return -EFAULT;
+
+			data = (struct pmem_data *)file->private_data;
+			offset = pmem_addr.offset;
+			length = pmem_addr.length;
+			if (offset + length > pmem_len(id, data))
+				return -EINVAL;
+			vaddr = pmem_addr.vaddr;
+			paddr = pmem_start_addr(id, data) + offset;
+
+			if (cmd == PMEM_CLEAN_INV_CACHES)
+				clean_and_invalidate_caches(vaddr,
+				length, paddr);
+			else if (cmd == PMEM_CLEAN_CACHES)
+				clean_caches(vaddr, length, paddr);
+			else if (cmd == PMEM_INV_CACHES)
+				invalidate_caches(vaddr, length, paddr);
+
+			break;
+		}
+
 	default:
 		if (pmem[id].ioctl)
 			return pmem[id].ioctl(file, cmd, arg);
