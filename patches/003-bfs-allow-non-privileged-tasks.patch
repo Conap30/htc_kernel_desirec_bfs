@@ -1,0 +1,31 @@
+From: San Mehat <san@google.com>
+Date: Wed, 9 Sep 2009 15:41:45 +0000 (-0700)
+Subject: BFS: Allow non priviledged tasks to bounce between SCHED_BATCH/NORMAL policies
+X-Git-Tag: android-2.6.29-bfs
+X-Git-Url: http://android.git.kernel.org/?p=kernel%2Fexperimental.git;a=commitdiff_plain;h=77ada37e38c8d824441c5d679fe3ef4ea9afa99e
+
+BFS: Allow non priviledged tasks to bounce between SCHED_BATCH/NORMAL policies
+
+    This is necessary for Android so that the VM can bump priorities of batch
+threads around GC to avoid an inversion on GC.
+
+Signed-off-by: San Mehat <san@google.com>
+---
+
+Index: android-omap/kernel/sched_bfs.c
+===================================================================
+--- android-omap.orig/kernel/sched_bfs.c	2009-10-05 15:40:26.000000000 +0800
++++ android-omap/kernel/sched_bfs.c	2009-10-05 15:41:04.000000000 +0800
+@@ -3226,6 +3226,12 @@
+ 				case SCHED_BATCH:
+ 					if (policy == SCHED_BATCH)
+ 						goto out;
++					/*
++					 * ANDROID: Allow tasks to move between
++					 * SCHED_NORMAL <-> SCHED_BATCH
++					 */
++					if (policy == SCHED_NORMAL)
++						break;
+ 					if (policy != SCHED_IDLEPRIO)
+ 					    	return -EPERM;
+ 					break;

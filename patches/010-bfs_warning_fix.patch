@@ -1,0 +1,12 @@
+--- kernel/sched_bfs.c.original	2010-04-20 16:00:23.000000000 +0200
++++ kernel/sched_bfs.c	2010-04-27 14:35:10.000000000 +0200
+@@ -2201,8 +2201,7 @@
+  */
+ void scheduler_tick(void)
+ {
+-	int cpu = smp_processor_id();
+-	struct rq *rq = cpu_rq(cpu);
++	struct rq *rq = cpu_rq(smp_processor_id());
+ 
+ 	sched_clock_tick();
+ 	update_rq_clock(rq);
