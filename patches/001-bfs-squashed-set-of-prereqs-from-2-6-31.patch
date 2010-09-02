@@ -1,0 +1,1939 @@
+From: Oleg Nesterov <oleg@redhat.com>
+Date: Thu, 2 Apr 2009 23:58:35 +0000 (-0700)
+Subject: BFS: Squashed set of prereqs from 2.6.31
+X-Git-Tag: android-2.6.29-bfs~2
+X-Git-Url: http://android.git.kernel.org/?p=kernel%2Fexperimental.git;a=commitdiff_plain;h=baee2b6a1d74593f99d92ef8e792dc636fed2a34
+
+BFS: Squashed set of prereqs from 2.6.31
+
+Includes the following squashed commits:
+
+pids: document task_pgrp/task_session is not safe without tasklist/rcu
+
+Even if task == current, it is not safe to dereference the result of
+task_pgrp/task_session.  We can race with another thread which changes the
+special pid via setpgid/setsid.
+
+Document this.  The next 2 patches give an example of the unsafe usage, we
+have more bad users.
+
+[akpm@linux-foundation.org: coding-style fixes]
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Louis Rilling <Louis.Rilling@kerlabs.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Pavel Emelyanov <xemul@openvz.org>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Roland McGrath <roland@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+pids: refactor vnr/nr_ns helpers to make them safe
+
+Inho, the safety rules for vnr/nr_ns helpers are horrible and buggy.
+
+task_pid_nr_ns(task) needs rcu/tasklist depending on task == current.
+
+As for "special" pids, vnr/nr_ns helpers always need rcu.  However, if
+task != current, they are unsafe even under rcu lock, we can't trust
+task->group_leader without the special checks.
+
+And almost every helper has a callsite which needs a fix.
+
+Also, it is a bit annoying that the implementations of, say,
+task_pgrp_vnr() and task_pgrp_nr_ns() are not "symmetrical".
+
+This patch introduces the new helper, __task_pid_nr_ns(), which is always
+safe to use, and turns all other helpers into the trivial wrappers.
+
+After this I'll send another patch which converts task_tgid_xxx() as well,
+they're are a bit special.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Louis Rilling <Louis.Rilling@kerlabs.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Pavel Emelyanov <xemul@openvz.org>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Roland McGrath <roland@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+pids: kill signal_struct-> __pgrp/__session and friends
+
+We are wasting 2 words in signal_struct without any reason to implement
+task_pgrp_nr() and task_session_nr().
+
+task_session_nr() has no callers since
+2e2ba22ea4fd4bb85f0fa37c521066db6775cbef, we can remove it.
+
+task_pgrp_nr() is still (I believe wrongly) used in fs/autofsX and
+fs/coda.
+
+This patch reimplements task_pgrp_nr() via task_pgrp_nr_ns(), and kills
+__pgrp/__session and the related helpers.
+
+The change in drivers/char/tty_io.c is cosmetic, but hopefully makes sense
+anyway.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Alan Cox <number6@the-village.bc.nu>		[tty parts]
+Cc: Cedric Le Goater <clg@fr.ibm.com>
+Cc: Dave Hansen <haveblue@us.ibm.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Pavel Emelyanov <xemul@openvz.org>
+Cc: Serge Hallyn <serue@us.ibm.com>
+Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+Cc: Roland McGrath <roland@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+Simplify copy_thread()
+
+First argument unused since 2.3.11.
+
+[akpm@linux-foundation.org: coding-style fixes]
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: <linux-arch@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+do_wait: fix waiting for the group stop with the dead leader
+
+do_wait(WSTOPPED) assumes that p->state must be == TASK_STOPPED, this is
+not true if the leader is already dead.  Check SIGNAL_STOP_STOPPED instead
+and use signal->group_exit_code.
+
+Trivial test-case:
+
+	void *tfunc(void *arg)
+	{
+		pause();
+		return NULL;
+	}
+
+	int main(void)
+	{
+		pthread_t thr;
+		pthread_create(&thr, NULL, tfunc, NULL);
+		pthread_exit(NULL);
+		return 0;
+	}
+
+It doesn't react to ^Z (and then to ^C or ^\). The task is stopped, but
+bash can't see this.
+
+The bug is very old, and it was reported multiple times. This patch was sent
+more than a year ago (http://marc.info/?t=119713920000003) but it was ignored.
+
+This change also fixes other oddities (but not all) in this area.  For
+example, before this patch:
+
+	$ sleep 100
+	^Z
+	[1]+  Stopped                 sleep 100
+	$ strace -p `pidof sleep`
+	Process 11442 attached - interrupt to quit
+
+strace hangs in do_wait(), because ->exit_code was already consumed by
+bash.  After this patch, strace happily proceeds:
+
+	--- SIGTSTP (Stopped) @ 0 (0) ---
+	restart_syscall(<... resuming interrupted call ...>
+
+To me, this looks much more "natural" and correct.
+
+Another example.  Let's suppose we have the main thread M and sub-thread
+T, the process is stopped, and its parent did wait(WSTOPPED).  Now we can
+ptrace T but not M.  This looks at least strange to me.
+
+Imho, do_wait() should not confuse the per-thread ptrace stops with the
+per-process job control stops.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jan Kratochvil <jan.kratochvil@redhat.com>
+Cc: Kaz Kylheku <kkylheku@gmail.com>
+Cc: Michael Kerrisk <mtk.manpages@googlemail.com>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: Ulrich Drepper <drepper@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+reparent_thread: don't call kill_orphaned_pgrp() if task_detached()
+
+If task_detached(p) == T, then either
+
+  a) p is not the main thread, we will find the group leader on the
+     ->children list.
+
+or
+
+  b) p is the group leader but its ->exit_state = EXIT_DEAD.  This
+     can only happen when the last sub-thread has died, but in that case
+     that thread has already called kill_orphaned_pgrp() from
+     exit_notify().
+
+In both cases kill_orphaned_pgrp() looks bogus.
+
+Move the task_detached() check up and simplify the code, this is also
+right from the "common sense" pov: we should do nothing with the detached
+childs, except move them to the new parent's ->children list.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+reparent_thread: fix the "is it traced" check
+
+reparent_thread() uses ptrace_reparented() to check whether this thread is
+ptraced, in that case we should not notify the new parent.
+
+But ptrace_reparented() is not exactly correct when the reparented thread
+is traced by /sbin/init, because forget_original_parent() has already
+changed ->real_parent.
+
+Currently, the only problem is the false notification.  But with the next
+patch the kernel crash in this (yes, pathological) case.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+reparent_thread: fix a zombie leak if /sbin/init ignores SIGCHLD
+
+If /sbin/init ignores SIGCHLD and we re-parent a zombie, it is leaked.
+reparent_thread() does do_notify_parent() which sets ->exit_signal = -1 in
+this case.  This means that nobody except us can reap it, the detached
+task is not visible to do_wait().
+
+Change reparent_thread() to return a boolean (like __pthread_detach) to
+indicate that the thread is dead and must be released.  Also change
+forget_original_parent() to add the child to ptrace_dead list in this
+case.
+
+The naming becomes insane, the next patch does the cleanup.
+
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+mm: fix proc_dointvec_userhz_jiffies "breakage"
+
+Addresses http://bugzilla.kernel.org/show_bug.cgi?id=9838
+
+On i386, HZ=1000, jiffies_to_clock_t() converts time in a somewhat strange
+way from the user's point of view:
+
+	# echo 500 >/proc/sys/vm/dirty_writeback_centisecs
+	# cat /proc/sys/vm/dirty_writeback_centisecs
+	499
+
+So, we have 5000 jiffies converted to only 499 clock ticks and reported
+back.
+
+TICK_NSEC = 999848
+ACTHZ = 256039
+
+Keeping in-kernel variable in units passed from userspace will fix issue
+of course, but this probably won't be right for every sysctl.
+
+[akpm@linux-foundation.org: coding-style fixes]
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Nick Piggin <nickpiggin@yahoo.com.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+mm: prevent divide error for small values of vm_dirty_bytes
+
+Avoid setting less than two pages for vm_dirty_bytes: this is necessary to
+avoid potential division by 0 (like the following) in get_dirty_limits().
+
+[   49.951610] divide error: 0000 [#1] PREEMPT SMP
+[   49.952195] last sysfs file: /sys/devices/pci0000:00/0000:00:01.1/host0/target0:0:0/0:0:0:0/block/sda/uevent
+[   49.952195] CPU 1
+[   49.952195] Modules linked in: pcspkr
+[   49.952195] Pid: 3064, comm: dd Not tainted 2.6.30-rc3 #1
+[   49.952195] RIP: 0010:[<ffffffff802d39a9>]  [<ffffffff802d39a9>] get_dirty_limits+0xe9/0x2c0
+[   49.952195] RSP: 0018:ffff88001de03a98  EFLAGS: 00010202
+[   49.952195] RAX: 00000000000000c0 RBX: ffff88001de03b80 RCX: 28f5c28f5c28f5c3
+[   49.952195] RDX: 0000000000000000 RSI: 00000000000000c0 RDI: 0000000000000000
+[   49.952195] RBP: ffff88001de03ae8 R08: 0000000000000000 R09: 0000000000000000
+[   49.952195] R10: ffff88001ddda9a0 R11: 0000000000000001 R12: 0000000000000001
+[   49.952195] R13: ffff88001fbc8218 R14: ffff88001de03b70 R15: ffff88001de03b78
+[   49.952195] FS:  00007fe9a435b6f0(0000) GS:ffff8800025d9000(0000) knlGS:0000000000000000
+[   49.952195] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   49.952195] CR2: 00007fe9a39ab000 CR3: 000000001de38000 CR4: 00000000000006e0
+[   49.952195] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   49.952195] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+[   49.952195] Process dd (pid: 3064, threadinfo ffff88001de02000, task ffff88001ddda250)
+[   49.952195] Stack:
+[   49.952195]  ffff88001fa0de00 ffff88001f2dbd70 ffff88001f9fe800 000080b900000000
+[   49.952195]  00000000000000c0 ffff8800027a6100 0000000000000400 ffff88001fbc8218
+[   49.952195]  0000000000000000 0000000000000600 ffff88001de03bb8 ffffffff802d3ed7
+[   49.952195] Call Trace:
+[   49.952195]  [<ffffffff802d3ed7>] balance_dirty_pages_ratelimited_nr+0x1d7/0x3f0
+[   49.952195]  [<ffffffff80368f8e>] ? ext3_writeback_write_end+0x9e/0x120
+[   49.952195]  [<ffffffff802cc7df>] generic_file_buffered_write+0x12f/0x330
+[   49.952195]  [<ffffffff802cce8d>] __generic_file_aio_write_nolock+0x26d/0x460
+[   49.952195]  [<ffffffff802cda32>] ? generic_file_aio_write+0x52/0xd0
+[   49.952195]  [<ffffffff802cda49>] generic_file_aio_write+0x69/0xd0
+[   49.952195]  [<ffffffff80365fa6>] ext3_file_write+0x26/0xc0
+[   49.952195]  [<ffffffff803034d1>] do_sync_write+0xf1/0x140
+[   49.952195]  [<ffffffff80290d1a>] ? get_lock_stats+0x2a/0x60
+[   49.952195]  [<ffffffff80280730>] ? autoremove_wake_function+0x0/0x40
+[   49.952195]  [<ffffffff8030411b>] vfs_write+0xcb/0x190
+[   49.952195]  [<ffffffff803042d0>] sys_write+0x50/0x90
+[   49.952195]  [<ffffffff8022ff6b>] system_call_fastpath+0x16/0x1b
+[   49.952195] Code: 00 00 00 2b 05 09 1c 17 01 48 89 c6 49 0f af f4 48 c1 ee 02 48 89 f0 48 f7 e1 48 89 d6 31 d2 48 c1 ee 02 48 0f af 75 d0 48 89 f0 <48> f7 f7 41 8b 95 ac 01 00 00 48 89 c7 49 0f af d4 48 c1 ea 02
+[   49.952195] RIP  [<ffffffff802d39a9>] get_dirty_limits+0xe9/0x2c0
+[   49.952195]  RSP <ffff88001de03a98>
+[   50.096523] ---[ end trace 008d7aa02f244d7b ]---
+
+Signed-off-by: Andrea Righi <righi.andrea@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Lameter <cl@linux-foundation.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+workqueue: avoid recursion in run_workqueue()
+
+1) lockdep will complain when run_workqueue() performs recursion.
+
+2) The recursive implementation of run_workqueue() means that
+   flush_workqueue() and its documentation are inconsistent.  This may
+   hide deadlocks and other bugs.
+
+3) The recursion in run_workqueue() will poison cwq->current_work, but
+   flush_work() and __cancel_work_timer(), etcetera need a reliable
+   cwq->current_work.
+
+Signed-off-by: Lai Jiangshan <laijs@cn.fujitsu.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Eric Dumazet <dada1@cosmosbay.com>
+Cc: Rusty Russell <rusty@rustcorp.com.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+work_on_cpu(): rewrite it to create a kernel thread on demand
+
+Impact: circular locking bugfix
+
+The various implemetnations and proposed implemetnations of work_on_cpu()
+are vulnerable to various deadlocks because they all used queues of some
+form.
+
+Unrelated pieces of kernel code thus gained dependencies wherein if one
+work_on_cpu() caller holds a lock which some other work_on_cpu() callback
+also takes, the kernel could rarely deadlock.
+
+Fix this by creating a short-lived kernel thread for each work_on_cpu()
+invokation.
+
+This is not terribly fast, but the only current caller of work_on_cpu() is
+pci_call_probe().
+
+It would be nice to find some other way of doing the node-local
+allocations in the PCI probe code so that we can zap work_on_cpu()
+altogether.  The code there is rather nasty.  I can't think of anything
+simple at this time...
+
+Cc: Ingo Molnar <mingo@elte.hu>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+
+epoll keyed wakeups: add __wake_up_locked_key() and __wake_up_sync_key()
+
+This patchset introduces wakeup hints for some of the most popular (from
+epoll POV) devices, so that epoll code can avoid spurious wakeups on its
+waiters.
+
+The problem with epoll is that the callback-based wakeups do not, ATM,
+carry any information about the events the wakeup is related to.  So the
+only choice epoll has (not being able to call f_op->poll() from inside the
+callback), is to add the file* to a ready-list and resolve the real events
+later on, at epoll_wait() (or its own f_op->poll()) time.  This can cause
+spurious wakeups, since the wake_up() itself might be for an event the
+caller is not interested into.
+
+The rate of these spurious wakeup can be pretty high in case of many
+network sockets being monitored.
+
+By allowing devices to report the events the wakeups refer to (at least
+the two major classes - POLLIN/POLLOUT), we are able to spare useless
+wakeups by proper handling inside the epoll's poll callback.
+
+Epoll will have in any case to call f_op->poll() on the file* later on,
+since the change to be done in order to have the full event set sent via
+wakeup, is too invasive for the way our f_op->poll() system works (the
+full event set is calculated inside the poll function - there are too many
+of them to even start thinking the change - also poll/select would need
+change too).
+
+Epoll is changed in a way that both devices which send event hints, and
+the ones that don't, are correctly handled.  The former will gain some
+efficiency though.
+
+As a general rule for devices, would be to add an event mask by using
+key-aware wakeup macros, when making up poll wait queues.  I tested it
+(together with the epoll's poll fix patch Andrew has in -mm) and wakeups
+for the supported devices are correctly filtered.
+
+Test program available here:
+
+http://www.xmailserver.org/epoll_test.c
+
+This patch:
+
+Nothing revolutionary here.  Just using the available "key" that our
+wakeup core already support.  The __wake_up_locked_key() was no brainer,
+since both __wake_up_locked() and __wake_up_locked_key() are thin wrappers
+around __wake_up_common().
+
+The __wake_up_sync() function had a body, so the choice was between
+borrowing the body for __wake_up_sync_key() and calling it from
+__wake_up_sync(), or make an inline and calling it from both.  I chose the
+former since in most archs it all resolves to "mov $0, REG; jmp ADDR".
+
+Signed-off-by: Davide Libenzi <davidel@xmailserver.org>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Ingo Molnar <mingo@elte.hu>
+Cc: David Miller <davem@davemloft.net>
+Cc: William Lee Irwin III <wli@movementarian.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+kernel/posix-cpu-timers.c: fix sparse warning
+
+Sparse reports the following in kernel/posix-cpu-timers.c:
+
+  warning: symbol 'firing' shadows an earlier one
+
+Signed-off-by: H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Subrata Modak <subrata@linux.vnet.ibm.com>
+LKML-Reference: <BD79186B4FD85F4B8E60E381CAEE1909016C1AFE@mi8nycmail19.Mi8.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+
+posix timers: fix RLIMIT_CPU && fork()
+
+See http://bugzilla.kernel.org/show_bug.cgi?id=12911
+
+copy_signal() copies signal->rlim, but RLIMIT_CPU is "lost". Because
+posix_cpu_timers_init_group() sets cputime_expires.prof_exp = 0 and thus
+fastpath_timer_check() returns false unless we have other cpu timers.
+
+This is the minimal fix for 2.6.29 (tested) and 2.6.28. The patch is not
+optimal, we need further cleanups here. With this patch update_rlimit_cpu()
+is not really needed, but I don't think it should be removed.
+
+The proper fix (I think) is:
+
+	- set_process_cpu_timer() should just start the cputimer->running
+	  logic (it does), no need to change cputime_expires.xxx_exp
+
+	- posix_cpu_timers_init_group() should set ->running when needed
+
+	- fastpath_timer_check() can check ->running instead of
+	  task_cputime_zero(signal->cputime_expires)
+
+Reported-by: Peter Lojkin <ia6432@inbox.ru>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: <stable@kernel.org> [for 2.6.29.x]
+LKML-Reference: <20090323193411.GA17514@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+
+posix_cpu_timers_exit_group(): Do not use thread_group_cputimer()
+
+When the process exits we don't have to run new cputimer nor
+use running one (as it not accounts when tsk->exit_state != 0)
+to get process CPU times.  As there is only one thread we can
+just use CPU times fields from task and signal structs.
+
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Roland McGrath <roland@redhat.com>
+Cc: Vitaly Mayatskikh <vmayatsk@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+
+sched, timers: move calc_load() to scheduler
+
+Dimitri Sivanich noticed that xtime_lock is held write locked across
+calc_load() which iterates over all online CPUs. That can cause long
+latencies for xtime_lock readers on large SMP systems.
+
+The load average calculation is an rough estimate anyway so there is
+no real need to protect the readers vs. the update. It's not a problem
+when the avenrun array is updated while a reader copies the values.
+
+Instead of iterating over all online CPUs let the scheduler_tick code
+update the number of active tasks shortly before the avenrun update
+happens. The avenrun update itself is handled by the CPU which calls
+do_timer().
+
+[ Impact: reduce xtime_lock write locked section ]
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+
+Conflicts:
+
+	kernel/sched.c
+	kernel/sched_idletask.c
+
+sched: remove unused fields from struct rq
+
+Impact: cleanup, new schedstat ABI
+
+Since they are used on in statistics and are always set to zero, the
+following fields from struct rq have been removed: yld_exp_empty,
+yld_act_empty and yld_both_empty.
+
+Both Sched Debug and SCHEDSTAT_VERSION versions has also been
+incremented since ABIs have been changed.
+
+The schedtop tool has been updated to properly handle new version of
+schedstat:
+
+   http://rt.wiki.kernel.org/index.php/Schedtop_utility
+
+Signed-off-by: Luis Henriques <henrix@sapo.pt>
+Acked-by: Gregory Haskins <ghaskins@novell.com>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+LKML-Reference: <20090324221002.GA10061@hades.domain.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+
+sched, timers: cleanup avenrun users
+
+avenrun is an rough estimate so we don't have to worry about
+consistency of the three avenrun values. Remove the xtime lock
+dependency and provide a function to scale the values. Cleanup the
+users.
+
+[ Impact: cleanup ]
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+
+Conflicts:
+
+	kernel/sched.c
+---
+
+diff --git a/Documentation/sysctl/vm.txt b/Documentation/sysctl/vm.txt
+index 3197fc8..c302ddf 100644
+--- a/Documentation/sysctl/vm.txt
++++ b/Documentation/sysctl/vm.txt
+@@ -88,6 +88,10 @@ will itself start writeback.
+ If dirty_bytes is written, dirty_ratio becomes a function of its value
+ (dirty_bytes / the amount of dirtyable system memory).
+ 
++Note: the minimum value allowed for dirty_bytes is two pages (in bytes); any
++value lower than this limit will be ignored and the old configuration will be
++retained.
++
+ ==============================================================
+ 
+ dirty_expire_centisecs
+diff --git a/arch/alpha/kernel/process.c b/arch/alpha/kernel/process.c
+index 8d0097f..3a2fb7a 100644
+--- a/arch/alpha/kernel/process.c
++++ b/arch/alpha/kernel/process.c
+@@ -272,7 +272,7 @@ alpha_vfork(struct pt_regs *regs)
+  */
+ 
+ int
+-copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++copy_thread(unsigned long clone_flags, unsigned long usp,
+ 	    unsigned long unused,
+ 	    struct task_struct * p, struct pt_regs * regs)
+ {
+diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+index 994b4d3..1e1dc49 100644
+--- a/arch/arm/kernel/process.c
++++ b/arch/arm/kernel/process.c
+@@ -373,7 +373,7 @@ void release_thread(struct task_struct *dead_task)
+ asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
+ 
+ int
+-copy_thread(int nr, unsigned long clone_flags, unsigned long stack_start,
++copy_thread(unsigned long clone_flags, unsigned long stack_start,
+ 	    unsigned long stk_sz, struct task_struct *p, struct pt_regs *regs)
+ {
+ 	struct thread_info *thread = task_thread_info(p);
+diff --git a/arch/avr32/kernel/process.c b/arch/avr32/kernel/process.c
+index 43ae555..1bbe1da 100644
+--- a/arch/avr32/kernel/process.c
++++ b/arch/avr32/kernel/process.c
+@@ -332,7 +332,7 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpu)
+ 
+ asmlinkage void ret_from_fork(void);
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/blackfin/kernel/process.c b/arch/blackfin/kernel/process.c
+index 33e2e89..f494272 100644
+--- a/arch/blackfin/kernel/process.c
++++ b/arch/blackfin/kernel/process.c
+@@ -193,7 +193,7 @@ asmlinkage int bfin_clone(struct pt_regs *regs)
+ }
+ 
+ int
+-copy_thread(int nr, unsigned long clone_flags,
++copy_thread(unsigned long clone_flags,
+ 	    unsigned long usp, unsigned long topstk,
+ 	    struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/cris/arch-v10/kernel/process.c b/arch/cris/arch-v10/kernel/process.c
+index bd9b3ff..c4c69cf 100644
+--- a/arch/cris/arch-v10/kernel/process.c
++++ b/arch/cris/arch-v10/kernel/process.c
+@@ -115,7 +115,7 @@ int kernel_thread(int (*fn)(void *), void * arg, unsigned long flags)
+  */
+ asmlinkage void ret_from_fork(void);
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/cris/arch-v32/kernel/process.c b/arch/cris/arch-v32/kernel/process.c
+index ced5b72..120e7f7 100644
+--- a/arch/cris/arch-v32/kernel/process.c
++++ b/arch/cris/arch-v32/kernel/process.c
+@@ -131,7 +131,7 @@ kernel_thread(int (*fn)(void *), void * arg, unsigned long flags)
+ extern asmlinkage void ret_from_fork(void);
+ 
+ int
+-copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++copy_thread(unsigned long clone_flags, unsigned long usp,
+ 	unsigned long unused,
+ 	struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/frv/kernel/process.c b/arch/frv/kernel/process.c
+index 9583a33..0de50df 100644
+--- a/arch/frv/kernel/process.c
++++ b/arch/frv/kernel/process.c
+@@ -204,7 +204,7 @@ void prepare_to_copy(struct task_struct *tsk)
+ /*
+  * set up the kernel stack and exception frames for a new process
+  */
+-int copy_thread(int nr, unsigned long clone_flags,
++int copy_thread(unsigned long clone_flags,
+ 		unsigned long usp, unsigned long topstk,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/h8300/kernel/process.c b/arch/h8300/kernel/process.c
+index a8ef654..e2f33d0 100644
+--- a/arch/h8300/kernel/process.c
++++ b/arch/h8300/kernel/process.c
+@@ -191,7 +191,7 @@ asmlinkage int h8300_clone(struct pt_regs *regs)
+ 
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags,
++int copy_thread(unsigned long clone_flags,
+                 unsigned long usp, unsigned long topstk,
+ 		 struct task_struct * p, struct pt_regs * regs)
+ {
+diff --git a/arch/ia64/kernel/process.c b/arch/ia64/kernel/process.c
+index c571627..5d7c0e5 100644
+--- a/arch/ia64/kernel/process.c
++++ b/arch/ia64/kernel/process.c
+@@ -413,7 +413,7 @@ ia64_load_extra (struct task_struct *task)
+  * so there is nothing to worry about.
+  */
+ int
+-copy_thread (int nr, unsigned long clone_flags,
++copy_thread(unsigned long clone_flags,
+ 	     unsigned long user_stack_base, unsigned long user_stack_size,
+ 	     struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/m32r/kernel/process.c b/arch/m32r/kernel/process.c
+index 7103d91..3e876f0 100644
+--- a/arch/m32r/kernel/process.c
++++ b/arch/m32r/kernel/process.c
+@@ -225,7 +225,7 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpu)
+ 	return 0; /* Task didn't use the fpu at all. */
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long spu,
++int copy_thread(unsigned long clone_flags, unsigned long spu,
+ 	unsigned long unused, struct task_struct *tsk, struct pt_regs *regs)
+ {
+ 	struct pt_regs *childregs = task_pt_regs(tsk);
+diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
+index 632ce01..ec37fb5 100644
+--- a/arch/m68k/kernel/process.c
++++ b/arch/m68k/kernel/process.c
+@@ -233,7 +233,7 @@ asmlinkage int m68k_clone(struct pt_regs *regs)
+ 		       parent_tidptr, child_tidptr);
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		 unsigned long unused,
+ 		 struct task_struct * p, struct pt_regs * regs)
+ {
+diff --git a/arch/m68knommu/kernel/process.c b/arch/m68knommu/kernel/process.c
+index 3f2d774..1e96c6e 100644
+--- a/arch/m68knommu/kernel/process.c
++++ b/arch/m68knommu/kernel/process.c
+@@ -199,7 +199,7 @@ asmlinkage int m68k_clone(struct pt_regs *regs)
+         return do_fork(clone_flags, newsp, regs, 0, NULL, NULL);
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags,
++int copy_thread(unsigned long clone_flags,
+ 		unsigned long usp, unsigned long topstk,
+ 		struct task_struct * p, struct pt_regs * regs)
+ {
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index ca2e402..1eaaa45 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -99,7 +99,7 @@ void flush_thread(void)
+ {
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 	unsigned long unused, struct task_struct *p, struct pt_regs *regs)
+ {
+ 	struct thread_info *ti = task_thread_info(p);
+diff --git a/arch/mn10300/kernel/process.c b/arch/mn10300/kernel/process.c
+index b28c9a6..234cf34 100644
+--- a/arch/mn10300/kernel/process.c
++++ b/arch/mn10300/kernel/process.c
+@@ -193,7 +193,7 @@ void prepare_to_copy(struct task_struct *tsk)
+  * set up the kernel stack for a new thread and copy arch-specific thread
+  * control information
+  */
+-int copy_thread(int nr, unsigned long clone_flags,
++int copy_thread(unsigned long clone_flags,
+ 		unsigned long c_usp, unsigned long ustk_size,
+ 		struct task_struct *p, struct pt_regs *kregs)
+ {
+diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
+index b80e02a..8aa591e 100644
+--- a/arch/parisc/kernel/process.c
++++ b/arch/parisc/kernel/process.c
+@@ -263,7 +263,7 @@ sys_vfork(struct pt_regs *regs)
+ }
+ 
+ int
+-copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++copy_thread(unsigned long clone_flags, unsigned long usp,
+ 	    unsigned long unused,	/* in ia64 this is "user_stack_size" */
+ 	    struct task_struct * p, struct pt_regs * pregs)
+ {
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index fb7049c..878c0ea 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -595,7 +595,7 @@ void prepare_to_copy(struct task_struct *tsk)
+ /*
+  * Copy a thread..
+  */
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused, struct task_struct *p,
+ 		struct pt_regs *regs)
+ {
+diff --git a/arch/s390/kernel/process.c b/arch/s390/kernel/process.c
+index 5cd38a9..0a39335 100644
+--- a/arch/s390/kernel/process.c
++++ b/arch/s390/kernel/process.c
+@@ -167,9 +167,9 @@ void release_thread(struct task_struct *dead_task)
+ {
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long new_stackp,
+-	unsigned long unused,
+-        struct task_struct * p, struct pt_regs * regs)
++int copy_thread(unsigned long clone_flags, unsigned long new_stackp,
++		unsigned long unused,
++		struct task_struct *p, struct pt_regs *regs)
+ {
+         struct fake_frame
+           {
+diff --git a/arch/sh/kernel/process_32.c b/arch/sh/kernel/process_32.c
+index ddafbbb..694bc15 100644
+--- a/arch/sh/kernel/process_32.c
++++ b/arch/sh/kernel/process_32.c
+@@ -170,7 +170,7 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpu)
+ 
+ asmlinkage void ret_from_fork(void);
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/sh/kernel/process_64.c b/arch/sh/kernel/process_64.c
+index c90c7e5..96be839 100644
+--- a/arch/sh/kernel/process_64.c
++++ b/arch/sh/kernel/process_64.c
+@@ -425,7 +425,7 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpu)
+ 
+ asmlinkage void ret_from_fork(void);
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/sparc/kernel/process_32.c b/arch/sparc/kernel/process_32.c
+index f4bee35..2830b41 100644
+--- a/arch/sparc/kernel/process_32.c
++++ b/arch/sparc/kernel/process_32.c
+@@ -455,7 +455,7 @@ asmlinkage int sparc_do_fork(unsigned long clone_flags,
+  */
+ extern void ret_from_fork(void);
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long sp,
++int copy_thread(unsigned long clone_flags, unsigned long sp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
+index a73954b..4041f94 100644
+--- a/arch/sparc/kernel/process_64.c
++++ b/arch/sparc/kernel/process_64.c
+@@ -561,7 +561,7 @@ asmlinkage long sparc_do_fork(unsigned long clone_flags,
+  * Parent -->  %o0 == childs  pid, %o1 == 0
+  * Child  -->  %o0 == parents pid, %o1 == 1
+  */
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long sp,
++int copy_thread(unsigned long clone_flags, unsigned long sp,
+ 		unsigned long unused,
+ 		struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
+index a1c6d07..4a28a15 100644
+--- a/arch/um/kernel/process.c
++++ b/arch/um/kernel/process.c
+@@ -179,7 +179,7 @@ void fork_handler(void)
+ 	userspace(&current->thread.regs.regs);
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long sp,
++int copy_thread(unsigned long clone_flags, unsigned long sp,
+ 		unsigned long stack_top, struct task_struct * p,
+ 		struct pt_regs *regs)
+ {
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index bd4da2a..dd450e2 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -287,7 +287,7 @@ void prepare_to_copy(struct task_struct *tsk)
+ 	unlazy_fpu(tsk);
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long sp,
++int copy_thread(unsigned long clone_flags, unsigned long sp,
+ 	unsigned long unused,
+ 	struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 85b4cb5..7f8ce3b 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -317,7 +317,7 @@ void prepare_to_copy(struct task_struct *tsk)
+ 	unlazy_fpu(tsk);
+ }
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long sp,
++int copy_thread(unsigned long clone_flags, unsigned long sp,
+ 		unsigned long unused,
+ 	struct task_struct *p, struct pt_regs *regs)
+ {
+diff --git a/arch/xtensa/kernel/process.c b/arch/xtensa/kernel/process.c
+index 9185597..031f366 100644
+--- a/arch/xtensa/kernel/process.c
++++ b/arch/xtensa/kernel/process.c
+@@ -172,7 +172,7 @@ void prepare_to_copy(struct task_struct *tsk)
+  *       childregs.
+  */
+ 
+-int copy_thread(int nr, unsigned long clone_flags, unsigned long usp,
++int copy_thread(unsigned long clone_flags, unsigned long usp,
+ 		unsigned long unused,
+                 struct task_struct * p, struct pt_regs * regs)
+ {
+diff --git a/drivers/char/tty_io.c b/drivers/char/tty_io.c
+index bc84e12..99bf9b0 100644
+--- a/drivers/char/tty_io.c
++++ b/drivers/char/tty_io.c
+@@ -2682,7 +2682,7 @@ void __do_SAK(struct tty_struct *tty)
+ 	/* Kill the entire session */
+ 	do_each_pid_task(session, PIDTYPE_SID, p) {
+ 		printk(KERN_NOTICE "SAK: killed process %d"
+-			" (%s): task_session_nr(p)==tty->session\n",
++			" (%s): task_session(p)==tty->session\n",
+ 			task_pid_nr(p), p->comm);
+ 		send_sig(SIGKILL, p, 1);
+ 	} while_each_pid_task(session, PIDTYPE_SID, p);
+@@ -2692,7 +2692,7 @@ void __do_SAK(struct tty_struct *tty)
+ 	do_each_thread(g, p) {
+ 		if (p->signal->tty == tty) {
+ 			printk(KERN_NOTICE "SAK: killed process %d"
+-			    " (%s): task_session_nr(p)==tty->session\n",
++			    " (%s): task_session(p)==tty->session\n",
+ 			    task_pid_nr(p), p->comm);
+ 			send_sig(SIGKILL, p, 1);
+ 			continue;
+diff --git a/fs/proc/loadavg.c b/fs/proc/loadavg.c
+index 9bca39c..1afa4dd 100644
+--- a/fs/proc/loadavg.c
++++ b/fs/proc/loadavg.c
+@@ -12,20 +12,14 @@
+ 
+ static int loadavg_proc_show(struct seq_file *m, void *v)
+ {
+-	int a, b, c;
+-	unsigned long seq;
++	unsigned long avnrun[3];
+ 
+-	do {
+-		seq = read_seqbegin(&xtime_lock);
+-		a = avenrun[0] + (FIXED_1/200);
+-		b = avenrun[1] + (FIXED_1/200);
+-		c = avenrun[2] + (FIXED_1/200);
+-	} while (read_seqretry(&xtime_lock, seq));
++	get_avenrun(avnrun, FIXED_1/200, 0);
+ 
+-	seq_printf(m, "%d.%02d %d.%02d %d.%02d %ld/%d %d\n",
+-		LOAD_INT(a), LOAD_FRAC(a),
+-		LOAD_INT(b), LOAD_FRAC(b),
+-		LOAD_INT(c), LOAD_FRAC(c),
++	seq_printf(m, "%lu.%02lu %lu.%02lu %lu.%02lu %ld/%d %d\n",
++		LOAD_INT(avnrun[0]), LOAD_FRAC(avnrun[0]),
++		LOAD_INT(avnrun[1]), LOAD_FRAC(avnrun[1]),
++		LOAD_INT(avnrun[2]), LOAD_FRAC(avnrun[2]),
+ 		nr_running(), nr_threads,
+ 		task_active_pid_ns(current)->last_pid);
+ 	return 0;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 011db2f..802d144 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -115,6 +115,7 @@ struct bts_tracer;
+  *    11 bit fractions.
+  */
+ extern unsigned long avenrun[];		/* Load averages */
++extern void get_avenrun(unsigned long *loads, unsigned long offset, int shift);
+ 
+ #define FSHIFT		11		/* nr of bits of precision */
+ #define FIXED_1		(1<<FSHIFT)	/* 1.0 as fixed-point */
+@@ -134,8 +135,8 @@ DECLARE_PER_CPU(unsigned long, process_counts);
+ extern int nr_processes(void);
+ extern unsigned long nr_running(void);
+ extern unsigned long nr_uninterruptible(void);
+-extern unsigned long nr_active(void);
+ extern unsigned long nr_iowait(void);
++extern void calc_global_load(void);
+ 
+ struct seq_file;
+ struct cfs_rq;
+@@ -538,25 +539,8 @@ struct signal_struct {
+ 
+ 	struct list_head cpu_timers[3];
+ 
+-	/* job control IDs */
+-
+-	/*
+-	 * pgrp and session fields are deprecated.
+-	 * use the task_session_Xnr and task_pgrp_Xnr routines below
+-	 */
+-
+-	union {
+-		pid_t pgrp __deprecated;
+-		pid_t __pgrp;
+-	};
+-
+ 	struct pid *tty_old_pgrp;
+ 
+-	union {
+-		pid_t session __deprecated;
+-		pid_t __session;
+-	};
+-
+ 	/* boolean value for session group leader */
+ 	int leader;
+ 
+@@ -1453,16 +1437,6 @@ static inline int rt_task(struct task_struct *p)
+ 	return rt_prio(p->prio);
+ }
+ 
+-static inline void set_task_session(struct task_struct *tsk, pid_t session)
+-{
+-	tsk->signal->__session = session;
+-}
+-
+-static inline void set_task_pgrp(struct task_struct *tsk, pid_t pgrp)
+-{
+-	tsk->signal->__pgrp = pgrp;
+-}
+-
+ static inline struct pid *task_pid(struct task_struct *task)
+ {
+ 	return task->pids[PIDTYPE_PID].pid;
+@@ -1473,6 +1447,11 @@ static inline struct pid *task_tgid(struct task_struct *task)
+ 	return task->group_leader->pids[PIDTYPE_PID].pid;
+ }
+ 
++/*
++ * Without tasklist or rcu lock it is not safe to dereference
++ * the result of task_pgrp/task_session even if task == current,
++ * we can race with another thread doing sys_setsid/sys_setpgid.
++ */
+ static inline struct pid *task_pgrp(struct task_struct *task)
+ {
+ 	return task->group_leader->pids[PIDTYPE_PGID].pid;
+@@ -1498,17 +1477,23 @@ struct pid_namespace;
+  *
+  * see also pid_nr() etc in include/linux/pid.h
+  */
++pid_t __task_pid_nr_ns(struct task_struct *task, enum pid_type type,
++			struct pid_namespace *ns);
+ 
+ static inline pid_t task_pid_nr(struct task_struct *tsk)
+ {
+ 	return tsk->pid;
+ }
+ 
+-pid_t task_pid_nr_ns(struct task_struct *tsk, struct pid_namespace *ns);
++static inline pid_t task_pid_nr_ns(struct task_struct *tsk,
++					struct pid_namespace *ns)
++{
++	return __task_pid_nr_ns(tsk, PIDTYPE_PID, ns);
++}
+ 
+ static inline pid_t task_pid_vnr(struct task_struct *tsk)
+ {
+-	return pid_vnr(task_pid(tsk));
++	return __task_pid_nr_ns(tsk, PIDTYPE_PID, NULL);
+ }
+ 
+ 
+@@ -1525,31 +1510,34 @@ static inline pid_t task_tgid_vnr(struct task_struct *tsk)
+ }
+ 
+ 
+-static inline pid_t task_pgrp_nr(struct task_struct *tsk)
++static inline pid_t task_pgrp_nr_ns(struct task_struct *tsk,
++					struct pid_namespace *ns)
+ {
+-	return tsk->signal->__pgrp;
++	return __task_pid_nr_ns(tsk, PIDTYPE_PGID, ns);
+ }
+ 
+-pid_t task_pgrp_nr_ns(struct task_struct *tsk, struct pid_namespace *ns);
+-
+ static inline pid_t task_pgrp_vnr(struct task_struct *tsk)
+ {
+-	return pid_vnr(task_pgrp(tsk));
++	return __task_pid_nr_ns(tsk, PIDTYPE_PGID, NULL);
+ }
+ 
+ 
+-static inline pid_t task_session_nr(struct task_struct *tsk)
++static inline pid_t task_session_nr_ns(struct task_struct *tsk,
++					struct pid_namespace *ns)
+ {
+-	return tsk->signal->__session;
++	return __task_pid_nr_ns(tsk, PIDTYPE_SID, ns);
+ }
+ 
+-pid_t task_session_nr_ns(struct task_struct *tsk, struct pid_namespace *ns);
+-
+ static inline pid_t task_session_vnr(struct task_struct *tsk)
+ {
+-	return pid_vnr(task_session(tsk));
++	return __task_pid_nr_ns(tsk, PIDTYPE_SID, NULL);
+ }
+ 
++/* obsolete, do not use */
++static inline pid_t task_pgrp_nr(struct task_struct *tsk)
++{
++	return task_pgrp_nr_ns(tsk, &init_pid_ns);
++}
+ 
+ /**
+  * pid_alive - check that a task structure is not stale
+@@ -1949,7 +1937,8 @@ extern void mm_release(struct task_struct *, struct mm_struct *);
+ /* Allocate a new mm structure and copy contents from tsk->mm */
+ extern struct mm_struct *dup_mm(struct task_struct *tsk);
+ 
+-extern int  copy_thread(int, unsigned long, unsigned long, unsigned long, struct task_struct *, struct pt_regs *);
++extern int copy_thread(unsigned long, unsigned long, unsigned long,
++			struct task_struct *, struct pt_regs *);
+ extern void flush_thread(void);
+ extern void exit_thread(void);
+ 
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index a210ede..0d2eeb0 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -135,8 +135,11 @@ static inline void __remove_wait_queue(wait_queue_head_t *head,
+ void __wake_up_common(wait_queue_head_t *q, unsigned int mode,
+ 			int nr_exclusive, int sync, void *key);
+ void __wake_up(wait_queue_head_t *q, unsigned int mode, int nr, void *key);
+-extern void __wake_up_locked(wait_queue_head_t *q, unsigned int mode);
+-extern void __wake_up_sync(wait_queue_head_t *q, unsigned int mode, int nr);
++void __wake_up_locked_key(wait_queue_head_t *q, unsigned int mode, void *key);
++void __wake_up_sync_key(wait_queue_head_t *q, unsigned int mode, int nr,
++			void *key);
++void __wake_up_locked(wait_queue_head_t *q, unsigned int mode);
++void __wake_up_sync(wait_queue_head_t *q, unsigned int mode, int nr);
+ void __wake_up_bit(wait_queue_head_t *, void *, int);
+ int __wait_on_bit(wait_queue_head_t *, struct wait_bit_queue *, int (*)(void *), unsigned);
+ int __wait_on_bit_lock(wait_queue_head_t *, struct wait_bit_queue *, int (*)(void *), unsigned);
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index 7300ecd..9344547 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -109,8 +109,8 @@ extern int dirty_background_ratio;
+ extern unsigned long dirty_background_bytes;
+ extern int vm_dirty_ratio;
+ extern unsigned long vm_dirty_bytes;
+-extern int dirty_writeback_interval;
+-extern int dirty_expire_interval;
++extern unsigned int dirty_writeback_interval;
++extern unsigned int dirty_expire_interval;
+ extern int vm_highmem_is_dirtyable;
+ extern int block_dump;
+ extern int laptop_mode;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index efd30cc..ca734c6 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -362,16 +362,12 @@ static void reparent_to_kthreadd(void)
+ void __set_special_pids(struct pid *pid)
+ {
+ 	struct task_struct *curr = current->group_leader;
+-	pid_t nr = pid_nr(pid);
+ 
+-	if (task_session(curr) != pid) {
++	if (task_session(curr) != pid)
+ 		change_pid(curr, PIDTYPE_SID, pid);
+-		set_task_session(curr, nr);
+-	}
+-	if (task_pgrp(curr) != pid) {
++
++	if (task_pgrp(curr) != pid)
+ 		change_pid(curr, PIDTYPE_PGID, pid);
+-		set_task_pgrp(curr, nr);
+-	}
+ }
+ 
+ static void set_special_pids(struct pid *pid)
+@@ -815,33 +811,44 @@ static void ptrace_exit_finish(struct task_struct *parent,
+ 	}
+ }
+ 
+-static void reparent_thread(struct task_struct *p, struct task_struct *father)
++/* Returns nonzero if the child should be released. */
++static int reparent_thread(struct task_struct *p, struct task_struct *father)
+ {
++	int dead;
++
+ 	if (p->pdeath_signal)
+ 		/* We already hold the tasklist_lock here.  */
+ 		group_send_sig_info(p->pdeath_signal, SEND_SIG_NOINFO, p);
+ 
+ 	list_move_tail(&p->sibling, &p->real_parent->children);
+ 
++	if (task_detached(p))
++		return 0;
+ 	/* If this is a threaded reparent there is no need to
+ 	 * notify anyone anything has happened.
+ 	 */
+ 	if (same_thread_group(p->real_parent, father))
+-		return;
++		return 0;
+ 
+ 	/* We don't want people slaying init.  */
+-	if (!task_detached(p))
+-		p->exit_signal = SIGCHLD;
++	p->exit_signal = SIGCHLD;
+ 
+ 	/* If we'd notified the old parent about this child's death,
+ 	 * also notify the new parent.
+ 	 */
+-	if (!ptrace_reparented(p) &&
+-	    p->exit_state == EXIT_ZOMBIE &&
+-	    !task_detached(p) && thread_group_empty(p))
++	dead = 0;
++	if (!p->ptrace &&
++	    p->exit_state == EXIT_ZOMBIE && thread_group_empty(p)) {
+ 		do_notify_parent(p, p->exit_signal);
++		if (task_detached(p)) {
++			p->exit_state = EXIT_DEAD;
++			dead = 1;
++		}
++	}
+ 
+ 	kill_orphaned_pgrp(p, father);
++
++	return dead;
+ }
+ 
+ /*
+@@ -901,7 +908,8 @@ static void forget_original_parent(struct task_struct *father)
+ 			BUG_ON(p->ptrace);
+ 			p->parent = p->real_parent;
+ 		}
+-		reparent_thread(p, father);
++		if (reparent_thread(p, father))
++			list_add(&p->ptrace_entry, &ptrace_dead);;
+ 	}
+ 
+ 	write_unlock_irq(&tasklist_lock);
+@@ -1420,6 +1428,18 @@ static int wait_task_zombie(struct task_struct *p, int options,
+ 	return retval;
+ }
+ 
++static int *task_stopped_code(struct task_struct *p, bool ptrace)
++{
++	if (ptrace) {
++		if (task_is_stopped_or_traced(p))
++			return &p->exit_code;
++	} else {
++		if (p->signal->flags & SIGNAL_STOP_STOPPED)
++			return &p->signal->group_exit_code;
++	}
++	return NULL;
++}
++
+ /*
+  * Handle sys_wait4 work for one task in state TASK_STOPPED.  We hold
+  * read_lock(&tasklist_lock) on entry.  If we return zero, we still hold
+@@ -1430,7 +1450,7 @@ static int wait_task_stopped(int ptrace, struct task_struct *p,
+ 			     int options, struct siginfo __user *infop,
+ 			     int __user *stat_addr, struct rusage __user *ru)
+ {
+-	int retval, exit_code, why;
++	int retval, exit_code, *p_code, why;
+ 	uid_t uid = 0; /* unneeded, required by compiler */
+ 	pid_t pid;
+ 
+@@ -1440,22 +1460,16 @@ static int wait_task_stopped(int ptrace, struct task_struct *p,
+ 	exit_code = 0;
+ 	spin_lock_irq(&p->sighand->siglock);
+ 
+-	if (unlikely(!task_is_stopped_or_traced(p)))
+-		goto unlock_sig;
+-
+-	if (!ptrace && p->signal->group_stop_count > 0)
+-		/*
+-		 * A group stop is in progress and this is the group leader.
+-		 * We won't report until all threads have stopped.
+-		 */
++	p_code = task_stopped_code(p, ptrace);
++	if (unlikely(!p_code))
+ 		goto unlock_sig;
+ 
+-	exit_code = p->exit_code;
++	exit_code = *p_code;
+ 	if (!exit_code)
+ 		goto unlock_sig;
+ 
+ 	if (!unlikely(options & WNOWAIT))
+-		p->exit_code = 0;
++		*p_code = 0;
+ 
+ 	/* don't need the RCU readlock here as we're holding a spinlock */
+ 	uid = __task_cred(p)->uid;
+@@ -1611,7 +1625,7 @@ static int wait_consider_task(struct task_struct *parent, int ptrace,
+ 	 */
+ 	*notask_error = 0;
+ 
+-	if (task_is_stopped_or_traced(p))
++	if (task_stopped_code(p, ptrace))
+ 		return wait_task_stopped(ptrace, p, options,
+ 					 infop, stat_addr, ru);
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 4854c2c..cf9f156 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1120,7 +1120,7 @@ static struct task_struct *copy_process(unsigned long clone_flags,
+ 		goto bad_fork_cleanup_mm;
+ 	if ((retval = copy_io(clone_flags, p)))
+ 		goto bad_fork_cleanup_namespaces;
+-	retval = copy_thread(0, clone_flags, stack_start, stack_size, p, regs);
++	retval = copy_thread(clone_flags, stack_start, stack_size, p, regs);
+ 	if (retval)
+ 		goto bad_fork_cleanup_io;
+ 
+@@ -1258,8 +1258,6 @@ static struct task_struct *copy_process(unsigned long clone_flags,
+ 			p->signal->leader_pid = pid;
+ 			tty_kref_put(p->signal->tty);
+ 			p->signal->tty = tty_kref_get(current->signal->tty);
+-			set_task_pgrp(p, task_pgrp_nr(current));
+-			set_task_session(p, task_session_nr(current));
+ 			attach_pid(p, PIDTYPE_PGID, task_pgrp(current));
+ 			attach_pid(p, PIDTYPE_SID, task_session(current));
+ 			list_add_tail_rcu(&p->tasks, &init_task.tasks);
+diff --git a/kernel/pid.c b/kernel/pid.c
+index 1b3586f..8582d4e 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -450,11 +450,24 @@ pid_t pid_vnr(struct pid *pid)
+ }
+ EXPORT_SYMBOL_GPL(pid_vnr);
+ 
+-pid_t task_pid_nr_ns(struct task_struct *tsk, struct pid_namespace *ns)
++pid_t __task_pid_nr_ns(struct task_struct *task, enum pid_type type,
++			struct pid_namespace *ns)
+ {
+-	return pid_nr_ns(task_pid(tsk), ns);
++	pid_t nr = 0;
++
++	rcu_read_lock();
++	if (!ns)
++		ns = current->nsproxy->pid_ns;
++	if (likely(pid_alive(task))) {
++		if (type != PIDTYPE_PID)
++			task = task->group_leader;
++		nr = pid_nr_ns(task->pids[type].pid, ns);
++	}
++	rcu_read_unlock();
++
++	return nr;
+ }
+-EXPORT_SYMBOL(task_pid_nr_ns);
++EXPORT_SYMBOL(__task_pid_nr_ns);
+ 
+ pid_t task_tgid_nr_ns(struct task_struct *tsk, struct pid_namespace *ns)
+ {
+@@ -462,18 +475,6 @@ pid_t task_tgid_nr_ns(struct task_struct *tsk, struct pid_namespace *ns)
+ }
+ EXPORT_SYMBOL(task_tgid_nr_ns);
+ 
+-pid_t task_pgrp_nr_ns(struct task_struct *tsk, struct pid_namespace *ns)
+-{
+-	return pid_nr_ns(task_pgrp(tsk), ns);
+-}
+-EXPORT_SYMBOL(task_pgrp_nr_ns);
+-
+-pid_t task_session_nr_ns(struct task_struct *tsk, struct pid_namespace *ns)
+-{
+-	return pid_nr_ns(task_session(tsk), ns);
+-}
+-EXPORT_SYMBOL(task_session_nr_ns);
+-
+ struct pid_namespace *task_active_pid_ns(struct task_struct *tsk)
+ {
+ 	return ns_of_pid(task_pid(tsk));
+diff --git a/kernel/posix-cpu-timers.c b/kernel/posix-cpu-timers.c
+index 476607f..0df323a 100644
+--- a/kernel/posix-cpu-timers.c
++++ b/kernel/posix-cpu-timers.c
+@@ -521,11 +521,12 @@ void posix_cpu_timers_exit(struct task_struct *tsk)
+ }
+ void posix_cpu_timers_exit_group(struct task_struct *tsk)
+ {
+-	struct task_cputime cputime;
++	struct signal_struct *const sig = tsk->signal;
+ 
+-	thread_group_cputimer(tsk, &cputime);
+ 	cleanup_timers(tsk->signal->cpu_timers,
+-		       cputime.utime, cputime.stime, cputime.sum_exec_runtime);
++		       cputime_add(tsk->utime, sig->utime),
++		       cputime_add(tsk->stime, sig->stime),
++		       tsk->se.sum_exec_runtime + sig->sum_sched_runtime);
+ }
+ 
+ static void clear_dead_task(struct k_itimer *timer, union cpu_time_count now)
+@@ -1371,7 +1372,8 @@ static inline int fastpath_timer_check(struct task_struct *tsk)
+ 		if (task_cputime_expired(&group_sample, &sig->cputime_expires))
+ 			return 1;
+ 	}
+-	return 0;
++
++	return sig->rlim[RLIMIT_CPU].rlim_cur != RLIM_INFINITY;
+ }
+ 
+ /*
+@@ -1419,19 +1421,19 @@ void run_posix_cpu_timers(struct task_struct *tsk)
+ 	 * timer call will interfere.
+ 	 */
+ 	list_for_each_entry_safe(timer, next, &firing, it.cpu.entry) {
+-		int firing;
++		int cpu_firing;
++
+ 		spin_lock(&timer->it_lock);
+ 		list_del_init(&timer->it.cpu.entry);
+-		firing = timer->it.cpu.firing;
++		cpu_firing = timer->it.cpu.firing;
+ 		timer->it.cpu.firing = 0;
+ 		/*
+ 		 * The firing flag is -1 if we collided with a reset
+ 		 * of the timer, which already reported this
+ 		 * almost-firing as an overrun.  So don't generate an event.
+ 		 */
+-		if (likely(firing >= 0)) {
++		if (likely(cpu_firing >= 0))
+ 			cpu_timer_fire(timer);
+-		}
+ 		spin_unlock(&timer->it_lock);
+ 	}
+ }
+diff --git a/kernel/sched.c b/kernel/sched.c
+index f1e8560..b0cdc3a 100644
+--- a/kernel/sched.c
++++ b/kernel/sched.c
+@@ -618,9 +618,6 @@ struct rq {
+ 	/* could above be rq->cfs_rq.exec_clock + rq->rt_rq.rt_runtime ? */
+ 
+ 	/* sys_sched_yield() stats */
+-	unsigned int yld_exp_empty;
+-	unsigned int yld_act_empty;
+-	unsigned int yld_both_empty;
+ 	unsigned int yld_count;
+ 
+ 	/* schedule() stats */
+@@ -2750,7 +2747,40 @@ unsigned long nr_iowait(void)
+ 	return sum;
+ }
+ 
+-unsigned long nr_active(void)
++/* Variables and functions for calc_load */
++static atomic_long_t calc_load_tasks;
++static unsigned long calc_load_update;
++unsigned long avenrun[3];
++EXPORT_SYMBOL(avenrun);
++
++/**
++ * get_avenrun - get the load average array
++ * @loads:	pointer to dest load array
++ * @offset:	offset to add
++ * @shift:	shift count to shift the result left
++ *
++ * These values are estimates at best, so no need for locking.
++ */
++void get_avenrun(unsigned long *loads, unsigned long offset, int shift)
++{
++	loads[0] = (avenrun[0] + offset) << shift;
++	loads[1] = (avenrun[1] + offset) << shift;
++	loads[2] = (avenrun[2] + offset) << shift;
++}
++
++static unsigned long
++calc_load(unsigned long load, unsigned long exp, unsigned long active)
++{
++	load *= exp;
++	load += active * (FIXED_1 - exp);
++	return load >> FSHIFT;
++}
++
++/*
++ * calc_load - update the avenrun load estimates 10 ticks after the
++ * CPUs have updated calc_load_tasks.
++ */
++void calc_global_load(void)
+ {
+ 	unsigned long i, running = 0, uninterruptible = 0;
+ 
+@@ -4781,11 +4811,17 @@ void __wake_up_locked(wait_queue_head_t *q, unsigned int mode)
+ 	__wake_up_common(q, mode, 1, 0, NULL);
+ }
+ 
++void __wake_up_locked_key(wait_queue_head_t *q, unsigned int mode, void *key)
++{
++	__wake_up_common(q, mode, 1, 0, key);
++}
++
+ /**
+- * __wake_up_sync - wake up threads blocked on a waitqueue.
++ * __wake_up_sync_key - wake up threads blocked on a waitqueue.
+  * @q: the waitqueue
+  * @mode: which threads
+  * @nr_exclusive: how many wake-one or wake-many threads to wake up
++ * @key: opaque value to be passed to wakeup targets
+  *
+  * The sync wakeup differs that the waker knows that it will schedule
+  * away soon, so while the target thread will be woken up, it will not
+@@ -4794,8 +4830,8 @@ void __wake_up_locked(wait_queue_head_t *q, unsigned int mode)
+  *
+  * On UP it can prevent extra preemption.
+  */
+-void
+-__wake_up_sync(wait_queue_head_t *q, unsigned int mode, int nr_exclusive)
++void __wake_up_sync_key(wait_queue_head_t *q, unsigned int mode,
++			int nr_exclusive, void *key)
+ {
+ 	unsigned long flags;
+ 	int sync = 1;
+@@ -4807,9 +4843,18 @@ __wake_up_sync(wait_queue_head_t *q, unsigned int mode, int nr_exclusive)
+ 		sync = 0;
+ 
+ 	spin_lock_irqsave(&q->lock, flags);
+-	__wake_up_common(q, mode, nr_exclusive, sync, NULL);
++	__wake_up_common(q, mode, nr_exclusive, sync, key);
+ 	spin_unlock_irqrestore(&q->lock, flags);
+ }
++EXPORT_SYMBOL_GPL(__wake_up_sync_key);
++
++/*
++ * __wake_up_sync - see __wake_up_sync_key()
++ */
++void __wake_up_sync(wait_queue_head_t *q, unsigned int mode, int nr_exclusive)
++{
++	__wake_up_sync_key(q, mode, nr_exclusive, NULL);
++}
+ EXPORT_SYMBOL_GPL(__wake_up_sync);	/* For internal use only */
+ 
+ /**
+diff --git a/kernel/sched_debug.c b/kernel/sched_debug.c
+index 16eeba4..bdf57bc 100644
+--- a/kernel/sched_debug.c
++++ b/kernel/sched_debug.c
+@@ -287,9 +287,6 @@ static void print_cpu(struct seq_file *m, int cpu)
+ #ifdef CONFIG_SCHEDSTATS
+ #define P(n) SEQ_printf(m, "  .%-30s: %d\n", #n, rq->n);
+ 
+-	P(yld_exp_empty);
+-	P(yld_act_empty);
+-	P(yld_both_empty);
+ 	P(yld_count);
+ 
+ 	P(sched_switch);
+@@ -314,7 +311,7 @@ static int sched_debug_show(struct seq_file *m, void *v)
+ 	u64 now = ktime_to_ns(ktime_get());
+ 	int cpu;
+ 
+-	SEQ_printf(m, "Sched Debug Version: v0.08, %s %.*s\n",
++	SEQ_printf(m, "Sched Debug Version: v0.09, %s %.*s\n",
+ 		init_utsname()->release,
+ 		(int)strcspn(init_utsname()->version, " "),
+ 		init_utsname()->version);
+diff --git a/kernel/sched_stats.h b/kernel/sched_stats.h
+index a8f93dd..32d2bd4 100644
+--- a/kernel/sched_stats.h
++++ b/kernel/sched_stats.h
+@@ -4,7 +4,7 @@
+  * bump this up when changing the output format or the meaning of an existing
+  * format, so that tools can adapt (or abort)
+  */
+-#define SCHEDSTAT_VERSION 14
++#define SCHEDSTAT_VERSION 15
+ 
+ static int show_schedstat(struct seq_file *seq, void *v)
+ {
+@@ -26,9 +26,8 @@ static int show_schedstat(struct seq_file *seq, void *v)
+ 
+ 		/* runqueue-specific stats */
+ 		seq_printf(seq,
+-		    "cpu%d %u %u %u %u %u %u %u %u %u %llu %llu %lu",
+-		    cpu, rq->yld_both_empty,
+-		    rq->yld_act_empty, rq->yld_exp_empty, rq->yld_count,
++		    "cpu%d %u %u %u %u %u %u %llu %llu %lu",
++		    cpu, rq->yld_count,
+ 		    rq->sched_switch, rq->sched_count, rq->sched_goidle,
+ 		    rq->ttwu_count, rq->ttwu_local,
+ 		    rq->rq_cpu_time,
+diff --git a/kernel/sys.c b/kernel/sys.c
+index 37f458e..742cefa 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -1013,10 +1013,8 @@ SYSCALL_DEFINE2(setpgid, pid_t, pid, pid_t, pgid)
+ 	if (err)
+ 		goto out;
+ 
+-	if (task_pgrp(p) != pgrp) {
++	if (task_pgrp(p) != pgrp)
+ 		change_pid(p, PIDTYPE_PGID, pgrp);
+-		set_task_pgrp(p, pid_nr(pgrp));
+-	}
+ 
+ 	err = 0;
+ out:
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 44df94d..6360e36 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -105,6 +105,9 @@ static int one = 1;
+ static unsigned long one_ul = 1;
+ static int one_hundred = 100;
+ 
++/* this is needed for the proc_doulongvec_minmax of vm_dirty_bytes */
++static unsigned long dirty_bytes_min = 2 * PAGE_SIZE;
++
+ /* this is needed for the proc_dointvec_minmax for [fs_]overflow UID and GID */
+ static int maxolduid = 65535;
+ static int minolduid;
+@@ -997,7 +1000,7 @@ static struct ctl_table vm_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= &dirty_bytes_handler,
+ 		.strategy	= &sysctl_intvec,
+-		.extra1		= &one_ul,
++		.extra1		= &dirty_bytes_min,
+ 	},
+ 	{
+ 		.procname	= "dirty_writeback_centisecs",
+@@ -1011,7 +1014,7 @@ static struct ctl_table vm_table[] = {
+ 		.data		= &dirty_expire_interval,
+ 		.maxlen		= sizeof(dirty_expire_interval),
+ 		.mode		= 0644,
+-		.proc_handler	= &proc_dointvec_userhz_jiffies,
++		.proc_handler	= &proc_dointvec,
+ 	},
+ 	{
+ 		.ctl_name	= VM_NR_PDFLUSH_THREADS,
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 900f1b6..3192dd0 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -22,7 +22,7 @@
+ 
+ /*
+  * This read-write spinlock protects us from races in SMP while
+- * playing with xtime and avenrun.
++ * playing with xtime.
+  */
+ __cacheline_aligned_in_smp DEFINE_SEQLOCK(xtime_lock);
+ 
+diff --git a/kernel/timer.c b/kernel/timer.c
+index 13dd64f..b81953c 100644
+--- a/kernel/timer.c
++++ b/kernel/timer.c
+@@ -1038,47 +1038,6 @@ void update_process_times(int user_tick)
+ }
+ 
+ /*
+- * Nr of active tasks - counted in fixed-point numbers
+- */
+-static unsigned long count_active_tasks(void)
+-{
+-	return nr_active() * FIXED_1;
+-}
+-
+-/*
+- * Hmm.. Changed this, as the GNU make sources (load.c) seems to
+- * imply that avenrun[] is the standard name for this kind of thing.
+- * Nothing else seems to be standardized: the fractional size etc
+- * all seem to differ on different machines.
+- *
+- * Requires xtime_lock to access.
+- */
+-unsigned long avenrun[3];
+-
+-EXPORT_SYMBOL(avenrun);
+-
+-/*
+- * calc_load - given tick count, update the avenrun load estimates.
+- * This is called while holding a write_lock on xtime_lock.
+- */
+-static inline void calc_load(unsigned long ticks)
+-{
+-	unsigned long active_tasks; /* fixed-point */
+-	static int count = LOAD_FREQ;
+-
+-	count -= ticks;
+-	if (unlikely(count < 0)) {
+-		active_tasks = count_active_tasks();
+-		do {
+-			CALC_LOAD(avenrun[0], EXP_1, active_tasks);
+-			CALC_LOAD(avenrun[1], EXP_5, active_tasks);
+-			CALC_LOAD(avenrun[2], EXP_15, active_tasks);
+-			count += LOAD_FREQ;
+-		} while (count < 0);
+-	}
+-}
+-
+-/*
+  * This function runs timers and the timer-tq in bottom half context.
+  */
+ static void run_timer_softirq(struct softirq_action *h)
+@@ -1102,16 +1061,6 @@ void run_local_timers(void)
+ }
+ 
+ /*
+- * Called by the timer interrupt. xtime_lock must already be taken
+- * by the timer IRQ!
+- */
+-static inline void update_times(unsigned long ticks)
+-{
+-	update_wall_time();
+-	calc_load(ticks);
+-}
+-
+-/*
+  * The 64-bit jiffies value is not atomic - you MUST NOT read it
+  * without sampling the sequence number in xtime_lock.
+  * jiffies is defined in the linker script...
+@@ -1120,7 +1069,8 @@ static inline void update_times(unsigned long ticks)
+ void do_timer(unsigned long ticks)
+ {
+ 	jiffies_64 += ticks;
+-	update_times(ticks);
++	update_wall_time();
++	calc_global_load();
+ }
+ 
+ #ifdef __ARCH_WANT_SYS_ALARM
+@@ -1321,37 +1271,17 @@ int do_sysinfo(struct sysinfo *info)
+ {
+ 	unsigned long mem_total, sav_total;
+ 	unsigned int mem_unit, bitcount;
+-	unsigned long seq;
++	struct timespec tp;
+ 
+ 	memset(info, 0, sizeof(struct sysinfo));
+ 
+-	do {
+-		struct timespec tp;
+-		seq = read_seqbegin(&xtime_lock);
+-
+-		/*
+-		 * This is annoying.  The below is the same thing
+-		 * posix_get_clock_monotonic() does, but it wants to
+-		 * take the lock which we want to cover the loads stuff
+-		 * too.
+-		 */
+-
+-		getnstimeofday(&tp);
+-		tp.tv_sec += wall_to_monotonic.tv_sec;
+-		tp.tv_nsec += wall_to_monotonic.tv_nsec;
+-		monotonic_to_bootbased(&tp);
+-		if (tp.tv_nsec - NSEC_PER_SEC >= 0) {
+-			tp.tv_nsec = tp.tv_nsec - NSEC_PER_SEC;
+-			tp.tv_sec++;
+-		}
+-		info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
++	ktime_get_ts(&tp);
++	monotonic_to_bootbased(&tp);
++	info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
+ 
+-		info->loads[0] = avenrun[0] << (SI_LOAD_SHIFT - FSHIFT);
+-		info->loads[1] = avenrun[1] << (SI_LOAD_SHIFT - FSHIFT);
+-		info->loads[2] = avenrun[2] << (SI_LOAD_SHIFT - FSHIFT);
++	get_avenrun(info->loads, 0, SI_LOAD_SHIFT - FSHIFT);
+ 
+-		info->procs = nr_threads;
+-	} while (read_seqretry(&xtime_lock, seq));
++	info->procs = nr_threads;
+ 
+ 	si_meminfo(info);
+ 	si_swapinfo(info);
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 1f0c509..6e9b6d1 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -48,8 +48,6 @@ struct cpu_workqueue_struct {
+ 
+ 	struct workqueue_struct *wq;
+ 	struct task_struct *thread;
+-
+-	int run_depth;		/* Detect run_workqueue() recursion depth */
+ } ____cacheline_aligned;
+ 
+ /*
+@@ -262,13 +260,6 @@ EXPORT_SYMBOL_GPL(queue_delayed_work_on);
+ static void run_workqueue(struct cpu_workqueue_struct *cwq)
+ {
+ 	spin_lock_irq(&cwq->lock);
+-	cwq->run_depth++;
+-	if (cwq->run_depth > 3) {
+-		/* morton gets to eat his hat */
+-		printk("%s: recursion depth exceeded: %d\n",
+-			__func__, cwq->run_depth);
+-		dump_stack();
+-	}
+ 	while (!list_empty(&cwq->worklist)) {
+ 		struct work_struct *work = list_entry(cwq->worklist.next,
+ 						struct work_struct, entry);
+@@ -311,7 +302,6 @@ static void run_workqueue(struct cpu_workqueue_struct *cwq)
+ 		spin_lock_irq(&cwq->lock);
+ 		cwq->current_work = NULL;
+ 	}
+-	cwq->run_depth--;
+ 	spin_unlock_irq(&cwq->lock);
+ }
+ 
+@@ -368,29 +358,20 @@ static void insert_wq_barrier(struct cpu_workqueue_struct *cwq,
+ 
+ static int flush_cpu_workqueue(struct cpu_workqueue_struct *cwq)
+ {
+-	int active;
+-
+-	if (cwq->thread == current) {
+-		/*
+-		 * Probably keventd trying to flush its own queue. So simply run
+-		 * it by hand rather than deadlocking.
+-		 */
+-		run_workqueue(cwq);
+-		active = 1;
+-	} else {
+-		struct wq_barrier barr;
++	int active = 0;
++	struct wq_barrier barr;
+ 
+-		active = 0;
+-		spin_lock_irq(&cwq->lock);
+-		if (!list_empty(&cwq->worklist) || cwq->current_work != NULL) {
+-			insert_wq_barrier(cwq, &barr, &cwq->worklist);
+-			active = 1;
+-		}
+-		spin_unlock_irq(&cwq->lock);
++	WARN_ON(cwq->thread == current);
+ 
+-		if (active)
+-			wait_for_completion(&barr.done);
++	spin_lock_irq(&cwq->lock);
++	if (!list_empty(&cwq->worklist) || cwq->current_work != NULL) {
++		insert_wq_barrier(cwq, &barr, &cwq->worklist);
++		active = 1;
+ 	}
++	spin_unlock_irq(&cwq->lock);
++
++	if (active)
++		wait_for_completion(&barr.done);
+ 
+ 	return active;
+ }
+@@ -971,20 +952,20 @@ undo:
+ }
+ 
+ #ifdef CONFIG_SMP
+-static struct workqueue_struct *work_on_cpu_wq __read_mostly;
+ 
+ struct work_for_cpu {
+-	struct work_struct work;
++	struct completion completion;
+ 	long (*fn)(void *);
+ 	void *arg;
+ 	long ret;
+ };
+ 
+-static void do_work_for_cpu(struct work_struct *w)
++static int do_work_for_cpu(void *_wfc)
+ {
+-	struct work_for_cpu *wfc = container_of(w, struct work_for_cpu, work);
+-
++	struct work_for_cpu *wfc = _wfc;
+ 	wfc->ret = wfc->fn(wfc->arg);
++	complete(&wfc->completion);
++	return 0;
+ }
+ 
+ /**
+@@ -995,17 +976,23 @@ static void do_work_for_cpu(struct work_struct *w)
+  *
+  * This will return the value @fn returns.
+  * It is up to the caller to ensure that the cpu doesn't go offline.
++ * The caller must not hold any locks which would prevent @fn from completing.
+  */
+ long work_on_cpu(unsigned int cpu, long (*fn)(void *), void *arg)
+ {
+-	struct work_for_cpu wfc;
+-
+-	INIT_WORK(&wfc.work, do_work_for_cpu);
+-	wfc.fn = fn;
+-	wfc.arg = arg;
+-	queue_work_on(cpu, work_on_cpu_wq, &wfc.work);
+-	flush_work(&wfc.work);
+-
++	struct task_struct *sub_thread;
++	struct work_for_cpu wfc = {
++		.completion = COMPLETION_INITIALIZER_ONSTACK(wfc.completion),
++		.fn = fn,
++		.arg = arg,
++	};
++
++	sub_thread = kthread_create(do_work_for_cpu, &wfc, "work_for_cpu");
++	if (IS_ERR(sub_thread))
++		return PTR_ERR(sub_thread);
++	kthread_bind(sub_thread, cpu);
++	wake_up_process(sub_thread);
++	wait_for_completion(&wfc.completion);
+ 	return wfc.ret;
+ }
+ EXPORT_SYMBOL_GPL(work_on_cpu);
+@@ -1021,8 +1008,4 @@ void __init init_workqueues(void)
+ 	hotcpu_notifier(workqueue_cpu_callback, 0);
+ 	keventd_wq = create_workqueue("events");
+ 	BUG_ON(!keventd_wq);
+-#ifdef CONFIG_SMP
+-	work_on_cpu_wq = create_workqueue("work_on_cpu");
+-	BUG_ON(!work_on_cpu_wq);
+-#endif
+ }
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 74dc57c..4ab79a5 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -92,14 +92,14 @@ int vm_dirty_ratio = 10;
+ unsigned long vm_dirty_bytes;
+ 
+ /*
+- * The interval between `kupdate'-style writebacks, in jiffies
++ * The interval between `kupdate'-style writebacks
+  */
+-int dirty_writeback_interval = 5 * HZ;
++unsigned int dirty_writeback_interval = 5 * 100; /* sentiseconds */
+ 
+ /*
+- * The longest number of jiffies for which data is allowed to remain dirty
++ * The longest time for which data is allowed to remain dirty
+  */
+-int dirty_expire_interval = 30 * HZ;
++unsigned int dirty_expire_interval = 30 * 100; /* sentiseconds */
+ 
+ /*
+  * Flag that makes the machine dump writes/reads and block dirtyings.
+@@ -770,9 +770,9 @@ static void wb_kupdate(unsigned long arg)
+ 
+ 	sync_supers();
+ 
+-	oldest_jif = jiffies - dirty_expire_interval;
++	oldest_jif = jiffies - msecs_to_jiffies(dirty_expire_interval);
+ 	start_jif = jiffies;
+-	next_jif = start_jif + dirty_writeback_interval;
++	next_jif = start_jif + msecs_to_jiffies(dirty_writeback_interval * 10);
+ 	nr_to_write = global_page_state(NR_FILE_DIRTY) +
+ 			global_page_state(NR_UNSTABLE_NFS) +
+ 			(inodes_stat.nr_inodes - inodes_stat.nr_unused);
+@@ -801,9 +801,10 @@ static void wb_kupdate(unsigned long arg)
+ int dirty_writeback_centisecs_handler(ctl_table *table, int write,
+ 	struct file *file, void __user *buffer, size_t *length, loff_t *ppos)
+ {
+-	proc_dointvec_userhz_jiffies(table, write, file, buffer, length, ppos);
++	proc_dointvec(table, write, file, buffer, length, ppos);
+ 	if (dirty_writeback_interval)
+-		mod_timer(&wb_timer, jiffies + dirty_writeback_interval);
++		mod_timer(&wb_timer, jiffies +
++			msecs_to_jiffies(dirty_writeback_interval * 10));
+ 	else
+ 		del_timer(&wb_timer);
+ 	return 0;
+@@ -905,7 +906,8 @@ void __init page_writeback_init(void)
+ {
+ 	int shift;
+ 
+-	mod_timer(&wb_timer, jiffies + dirty_writeback_interval);
++	mod_timer(&wb_timer,
++		  jiffies + msecs_to_jiffies(dirty_writeback_interval * 10));
+ 	writeback_set_ratelimit();
+ 	register_cpu_notifier(&ratelimit_nb);
+ 

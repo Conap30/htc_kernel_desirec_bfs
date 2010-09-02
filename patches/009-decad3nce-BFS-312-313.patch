@@ -1,0 +1,42 @@
+cec651fbae3c6bad75c15bcd96048ced1d3ddbdb
+ include/linux/sched.h |    2 +-
+ kernel/sched_bfs.c    |   13 +++++++++----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 3c8b734..13c6653 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1308,7 +1308,7 @@ static inline void tsk_cpus_current(struct task_struct *p)
+ 
+ static inline void print_scheduler_version(void)
+ {
+-	printk(KERN_INFO"BFS CPU scheduler v0.312 by Con Kolivas.\n");
++	printk(KERN_INFO"BFS CPU scheduler v0.313 by Con Kolivas.\n");
+ }
+ 
+ static inline int iso_task(struct task_struct *p)
+diff --git a/kernel/sched_bfs.c b/kernel/sched_bfs.c
+index 7b55d0a..4669131 100644
+--- a/kernel/sched_bfs.c
++++ b/kernel/sched_bfs.c
+@@ -6319,10 +6319,15 @@ void __might_sleep(char *file, int line)
+ 		if (time_before(jiffies, prev_jiffy + HZ) && prev_jiffy)
+ 			return;
+ 		prev_jiffy = jiffies;
+-		printk(KERN_ERR "BUG: sleeping function called from invalid"
+-				" context at %s:%d\n", file, line);
+-		printk("in_atomic():%d, irqs_disabled():%d\n",
+-			in_atomic(), irqs_disabled());
++
++		printk(KERN_ERR
++			"BUG: sleeping function called from invalid context at %s:%d\n",
++				file, line);
++		printk(KERN_ERR
++			"in_atomic(): %d, irqs_disabled(): %d, pid: %d, name: %s\n",
++				in_atomic(), irqs_disabled(),
++				current->pid, current->comm);
++
+ 		debug_show_held_locks(current);
+ 		if (irqs_disabled())
+ 			print_irqtrace_events(current);

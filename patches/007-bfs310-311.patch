@@ -1,0 +1,53 @@
+Fix redefinition of NORMAL_PRIO
+
+Fix integer overflow on 32bit with iso tick calculation which breaks iso
+throttling. Thanks Jayson R. King for picking it up and providing a fix!
+
+---
+ arch/powerpc/platforms/cell/spufs/sched.c |    5 -----
+ init/main.c                               |    2 +-
+ kernel/sched_bfs.c                        |    2 +-
+ 3 files changed, 2 insertions(+), 7 deletions(-)
+
+Index: linux-2.6.31-bfs/arch/powerpc/platforms/cell/spufs/sched.c
+===================================================================
+--- linux-2.6.31-bfs.orig/arch/powerpc/platforms/cell/spufs/sched.c	2009-11-23 16:19:59.791125722 +1100
++++ linux-2.6.31-bfs/arch/powerpc/platforms/cell/spufs/sched.c	2009-11-23 16:20:09.969127075 +1100
+@@ -62,11 +62,6 @@ static struct timer_list spusched_timer;
+ static struct timer_list spuloadavg_timer;
+ 
+ /*
+- * Priority of a normal, non-rt, non-niced'd process (aka nice level 0).
+- */
+-#define NORMAL_PRIO		120
+-
+-/*
+  * Frequency of the spu scheduler tick.  By default we do one SPU scheduler
+  * tick for every 10 CPU scheduler ticks.
+  */
+Index: linux-2.6.31-bfs/kernel/sched_bfs.c
+===================================================================
+--- linux-2.6.31-bfs.orig/kernel/sched_bfs.c	2009-11-23 16:19:59.797253451 +1100
++++ linux-2.6.31-bfs/kernel/sched_bfs.c	2009-11-23 16:20:09.970125737 +1100
+@@ -2150,7 +2150,7 @@ static inline void no_iso_tick(void)
+ {
+ 	if (grq.iso_ticks) {
+ 		grq_lock();
+-		grq.iso_ticks = grq.iso_ticks * (ISO_PERIOD - 1) / ISO_PERIOD;
++		grq.iso_ticks -= grq.iso_ticks / ISO_PERIOD + 1;
+ 		if (unlikely(grq.iso_refractory && grq.iso_ticks /
+ 		    ISO_PERIOD < (sched_iso_cpu * 90 / 100)))
+ 			clear_iso_refractory();
+Index: linux-2.6.31-bfs/init/main.c
+===================================================================
+--- linux-2.6.31-bfs.orig/init/main.c	2009-11-23 16:20:14.137000839 +1100
++++ linux-2.6.31-bfs/init/main.c	2009-11-23 16:20:28.299064157 +1100
+@@ -843,7 +843,7 @@ static noinline int init_post(void)
+ 	system_state = SYSTEM_RUNNING;
+ 	numa_default_policy();
+ 
+-	printk(KERN_INFO"BFS CPU scheduler v0.310 by Con Kolivas.\n");
++	printk(KERN_INFO"BFS CPU scheduler v0.311 by Con Kolivas.\n");
+ 
+ 	if (sys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
+ 		printk(KERN_WARNING "Warning: unable to open an initial console.\n");

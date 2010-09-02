@@ -1,0 +1,11 @@
+--- kernel/sched_bfs.c.old	2010-05-03 21:30:38.000000000 +0200
++++ kernel/sched_bfs.c	2010-05-03 21:36:26.000000000 +0200
+@@ -951,7 +951,7 @@
+ #else
+ static inline void resched_task(struct task_struct *p)
+ {
+-	assert_raw_spin_locked(&grq.lock);
++	assert_spin_locked(&grq.lock);
+ 	set_tsk_need_resched(p);
+ }
+ #endif
