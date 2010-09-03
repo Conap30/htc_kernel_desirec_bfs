@@ -46,7 +46,6 @@
 0x00000000	transport_class_unregister	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	fb_videomode_to_var	vmlinux	EXPORT_SYMBOL
 0x00000000	default_wake_function	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sdp_port_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	iget_locked	vmlinux	EXPORT_SYMBOL
 0x00000000	sock_get_timestampns	vmlinux	EXPORT_SYMBOL
 0x00000000	class_interface_register	vmlinux	EXPORT_SYMBOL_GPL
@@ -67,10 +66,6 @@
 0x00000000	generic_file_readonly_mmap	vmlinux	EXPORT_SYMBOL
 0x00000000	raw_notifier_chain_unregister	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__ipv6_addr_type	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	unregister_qdisc	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	crypto_shash_final	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crypto_shash_finup	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	scatterwalk_copychunks	vmlinux	EXPORT_SYMBOL_GPL
@@ -106,7 +101,6 @@
 0x00000000	load_nls	vmlinux	EXPORT_SYMBOL
 0x00000000	dma_unmap_sg	vmlinux	EXPORT_SYMBOL
 0x00000000	rtc_year_days	vmlinux	EXPORT_SYMBOL
-0x00000000	ip6_local_out	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
 0x00000000	klist_iter_exit	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ip6_local_out	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	register_pppox_proto	vmlinux	EXPORT_SYMBOL
@@ -139,11 +133,7 @@
 0x00000000	tty_hung_up_p	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_cleanup_queue	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_setlease	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_getsockopt	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ipv6_getsockopt	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	mpage_writepages	vmlinux	EXPORT_SYMBOL
 0x00000000	write_one_page	vmlinux	EXPORT_SYMBOL
 0x00000000	async_synchronize_cookie	vmlinux	EXPORT_SYMBOL_GPL
@@ -170,6 +160,7 @@
 0x00000000	param_get_long	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_twsk_schedule	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	free_rs	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	posix_acl_alloc	vmlinux	EXPORT_SYMBOL
 0x00000000	pgprot_kernel	vmlinux	EXPORT_SYMBOL
 0x00000000	nfnetlink_parse_nat_setup_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	skb_copy_datagram_iovec	vmlinux	EXPORT_SYMBOL
@@ -210,11 +201,7 @@
 0x00000000	prepare_kernel_cred	vmlinux	EXPORT_SYMBOL
 0x00000000	mktime	vmlinux	EXPORT_SYMBOL
 0x00000000	system_state	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_tunnel_alloc_spi	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_tunnel_alloc_spi	net/ipv6/xfrm6_tunnel	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	hidinput_connect	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	v4l2_int_ioctl_0	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	splice_from_pipe_next	vmlinux	EXPORT_SYMBOL
@@ -228,7 +215,6 @@
 0x00000000	__crypto_alloc_tfm	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	generic_delete_inode	vmlinux	EXPORT_SYMBOL
 0x00000000	kref_put	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_pptp_hook_expectfn	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	mmc_wait_for_req	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_run_queue	vmlinux	EXPORT_SYMBOL
 0x00000000	do_sync_mapping_range	vmlinux	EXPORT_SYMBOL_GPL
@@ -316,7 +302,6 @@
 0x00000000	sock_no_setsockopt	vmlinux	EXPORT_SYMBOL
 0x00000000	__blockdev_direct_IO	vmlinux	EXPORT_SYMBOL
 0x00000000	splice_from_pipe_end	vmlinux	EXPORT_SYMBOL
-0x00000000	ip6_route_me_harder	net/ipv6/ipv6	EXPORT_SYMBOL
 0x00000000	__down_read_trylock	vmlinux	EXPORT_SYMBOL
 0x00000000	ip6_route_me_harder	vmlinux	EXPORT_SYMBOL
 0x00000000	km_new_mapping	vmlinux	EXPORT_SYMBOL
@@ -351,11 +336,7 @@
 0x00000000	inet_hash	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sysfs_create_file	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	seq_lseek	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_frag_match	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ip6_frag_match	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	bitmap_find_free_region	vmlinux	EXPORT_SYMBOL
 0x00000000	leds_list_lock	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	set_disk_ro	vmlinux	EXPORT_SYMBOL
@@ -402,11 +383,7 @@
 0x00000000	unregister_netdev	vmlinux	EXPORT_SYMBOL
 0x00000000	proc_net_mkdir	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__bforget	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_add_protocol	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_add_protocol	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	raw_unhash_sk	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	xt_register_table	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sock_no_listen	vmlinux	EXPORT_SYMBOL
@@ -431,13 +408,10 @@
 0x00000000	skcipher_geniv_exit	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	file_update_time	vmlinux	EXPORT_SYMBOL
 0x00000000	bdi_unregister	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_csk_search_req	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_csk_search_req	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xc5000_attach	vmlinux	EXPORT_SYMBOL
 0x00000000	kobject_uevent_env	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	mb_cache_entry_alloc	vmlinux	EXPORT_SYMBOL
 0x00000000	fp_printk	vmlinux	EXPORT_SYMBOL
 0x00000000	put_cmsg	vmlinux	EXPORT_SYMBOL
 0x00000000	skb_free_datagram	vmlinux	EXPORT_SYMBOL
@@ -467,11 +441,7 @@
 0x00000000	nf_ct_l3protos	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	linkwatch_fire_event	vmlinux	EXPORT_SYMBOL
 0x00000000	kfifo_alloc	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ndisc_build_skb	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ndisc_build_skb	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	unregister_netevent_notifier	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	desirec_bt_fastclock_power	vmlinux	EXPORT_SYMBOL
 0x00000000	v4l2_i2c_subdev_init	vmlinux	EXPORT_SYMBOL_GPL
@@ -486,7 +456,6 @@
 0x00000000	sget	vmlinux	EXPORT_SYMBOL
 0x00000000	set_irq_chip	vmlinux	EXPORT_SYMBOL
 0x00000000	memset	vmlinux	EXPORT_SYMBOL
-0x00000000	ip6_dst_blackhole	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
 0x00000000	hci_send_sco	vmlinux	EXPORT_SYMBOL
 0x00000000	ip6_dst_blackhole	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_queue_max_hw_segments	vmlinux	EXPORT_SYMBOL
@@ -512,7 +481,6 @@
 0x00000000	block_invalidatepage	vmlinux	EXPORT_SYMBOL
 0x00000000	may_umount_tree	vmlinux	EXPORT_SYMBOL
 0x00000000	warn_slowpath	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_need_gre	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	udp_lib_get_port	vmlinux	EXPORT_SYMBOL
 0x00000000	tty_ldisc_ref	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	devm_ioport_map	vmlinux	EXPORT_SYMBOL
@@ -547,7 +515,6 @@
 0x00000000	msm_v4l2_unregister	vmlinux	EXPORT_SYMBOL
 0x00000000	platform_device_add_resources	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_end_request_callback	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	in6_dev_finish_destroy	net/ipv6/ipv6	EXPORT_SYMBOL
 0x00000000	rb_prev	vmlinux	EXPORT_SYMBOL
 0x00000000	in6_dev_finish_destroy	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_gro_receive	vmlinux	EXPORT_SYMBOL
@@ -624,11 +591,7 @@
 0x00000000	mpage_bio_submit	vmlinux	EXPORT_SYMBOL
 0x00000000	gnet_stats_start_copy_compat	vmlinux	EXPORT_SYMBOL
 0x00000000	rtc_alarm_irq_enable	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_del_protocol	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_del_protocol	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xfrm_input_resume	vmlinux	EXPORT_SYMBOL
 0x00000000	udplite_prot	vmlinux	EXPORT_SYMBOL
 0x00000000	sock_create_kern	vmlinux	EXPORT_SYMBOL
@@ -685,16 +648,10 @@
 0x00000000	ring_buffer_resize	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	dst_destroy	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_errno	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ndisc_send_skb	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ndisc_send_skb	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nf_unregister_queue_handlers	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	fb_mode_is_equal	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_check_available_features	vmlinux	EXPORT_SYMBOL
-0x00000000	xfrm6_tunnel_register	net/ipv6/tunnel6	EXPORT_SYMBOL
-0x00000000	xfrm4_tunnel_register	net/ipv4/tunnel4	EXPORT_SYMBOL
 0x00000000	rfkill_restore_states	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	xfrm6_tunnel_register	vmlinux	EXPORT_SYMBOL
 0x00000000	xfrm4_tunnel_register	vmlinux	EXPORT_SYMBOL
@@ -709,10 +666,7 @@
 0x00000000	get_user_pages	vmlinux	EXPORT_SYMBOL
 0x00000000	sysctl_optmem_max	vmlinux	EXPORT_SYMBOL
 0x00000000	v4l2_device_register	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	__might_sleep	vmlinux	EXPORT_SYMBOL
-=======
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	in4_pton	vmlinux	EXPORT_SYMBOL
 0x00000000	in6_pton	vmlinux	EXPORT_SYMBOL
 0x00000000	cfb_copyarea	vmlinux	EXPORT_SYMBOL
@@ -720,11 +674,7 @@
 0x00000000	mnt_want_write	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__clear_user	vmlinux	EXPORT_SYMBOL
 0x00000000	__dev_remove_pack	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	posix_acl_to_xattr	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	tcf_hash_insert	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	register_pernet_gen_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crypto_has_alg	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	iget5_locked	vmlinux	EXPORT_SYMBOL
@@ -735,11 +685,7 @@
 0x00000000	test_taint	vmlinux	EXPORT_SYMBOL
 0x00000000	__udivsi3	vmlinux	EXPORT_SYMBOL
 0x00000000	invalidate_bh_lrus	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipcomp_init_state	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipcomp_init_state	net/xfrm/xfrm_ipcomp	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xt_check_match	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crypto_aes_expand_key	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	d_splice_alias	vmlinux	EXPORT_SYMBOL
@@ -757,11 +703,7 @@
 0x00000000	cad_pid	vmlinux	EXPORT_SYMBOL
 0x00000000	cacheid	vmlinux	EXPORT_SYMBOL
 0x00000000	get_sb_mtd	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_hash_frag	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_hash_frag	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	crypto_probing_notify	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	netif_receive_skb	vmlinux	EXPORT_SYMBOL
 0x00000000	tuner_count	vmlinux	EXPORT_SYMBOL
@@ -798,11 +740,7 @@
 0x00000000	fiemap_fill_next_extent	vmlinux	EXPORT_SYMBOL
 0x00000000	kfifo_init	vmlinux	EXPORT_SYMBOL
 0x00000000	crypto_shash_digest	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	icmpv6msg_statistics	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	icmpv6msg_statistics	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	rtnl_set_sk_err	vmlinux	EXPORT_SYMBOL
 0x00000000	driver_add_kobj	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	downgrade_write	vmlinux	EXPORT_SYMBOL
@@ -831,11 +769,7 @@
 0x00000000	allow_signal	vmlinux	EXPORT_SYMBOL
 0x00000000	platform_get_irq	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	kill_anon_super	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_rcv	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_rcv	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xfrm4_rcv	vmlinux	EXPORT_SYMBOL
 0x00000000	ppp_output_wakeup	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_queue_hardsect_size	vmlinux	EXPORT_SYMBOL
@@ -873,11 +807,7 @@
 0x00000000	vmalloc_node	vmlinux	EXPORT_SYMBOL
 0x00000000	mempool_destroy	vmlinux	EXPORT_SYMBOL
 0x00000000	kernel_halt	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_tunnel_spi_lookup	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_tunnel_spi_lookup	net/ipv6/xfrm6_tunnel	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	blk_queue_set_discard	vmlinux	EXPORT_SYMBOL
 0x00000000	set_binfmt	vmlinux	EXPORT_SYMBOL
 0x00000000	km_policy_expired	vmlinux	EXPORT_SYMBOL
@@ -946,7 +876,6 @@
 0x00000000	sysctl_tcp_adv_win_scale	vmlinux	EXPORT_SYMBOL
 0x00000000	ip_local_out	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	generic_permission	vmlinux	EXPORT_SYMBOL
-0x00000000	hid_compat_apple	vmlinux	EXPORT_SYMBOL
 0x00000000	call_usermodehelper_stdinpipe	vmlinux	EXPORT_SYMBOL
 0x00000000	uart_get_baud_rate	vmlinux	EXPORT_SYMBOL
 0x00000000	atomic_notifier_chain_unregister	vmlinux	EXPORT_SYMBOL_GPL
@@ -957,7 +886,6 @@
 0x00000000	splice_direct_to_actor	vmlinux	EXPORT_SYMBOL
 0x00000000	__alloc_pages_internal	vmlinux	EXPORT_SYMBOL
 0x00000000	hrtimer_get_res	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	nf_nat_pptp_hook_inbound	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	nf_conntrack_l3proto_unregister	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	nf_conntrack_l4proto_unregister	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sock_setsockopt	vmlinux	EXPORT_SYMBOL
@@ -981,6 +909,7 @@
 0x00000000	dmam_free_coherent	vmlinux	EXPORT_SYMBOL
 0x00000000	transport_setup_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_queue_softirq_done	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_permission	vmlinux	EXPORT_SYMBOL
 0x00000000	d_lookup	vmlinux	EXPORT_SYMBOL
 0x00000000	genl_unregister_mc_group	vmlinux	EXPORT_SYMBOL
 0x00000000	skb_morph	vmlinux	EXPORT_SYMBOL_GPL
@@ -1001,11 +930,7 @@
 0x00000000	inode_init_once	vmlinux	EXPORT_SYMBOL
 0x00000000	__srcu_notifier_call_chain	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	pmic_secure_mpp_config_i_sink	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	nf_ip6_checksum	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	nf_ip6_checksum	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	device_move	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	scsi_cmd_ioctl	vmlinux	EXPORT_SYMBOL
 0x00000000	neigh_seq_stop	vmlinux	EXPORT_SYMBOL
@@ -1030,11 +955,7 @@
 0x00000000	insert_inode_locked	vmlinux	EXPORT_SYMBOL
 0x00000000	ring_buffer_free	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ring_buffer_size	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	__ipv6_isatap_ifid	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	__ipv6_isatap_ifid	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	hidinput_disconnect	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	baswap	vmlinux	EXPORT_SYMBOL
 0x00000000	__blk_put_request	vmlinux	EXPORT_SYMBOL_GPL
@@ -1067,11 +988,7 @@
 0x00000000	kernel_getsockopt	vmlinux	EXPORT_SYMBOL
 0x00000000	kernel_setsockopt	vmlinux	EXPORT_SYMBOL
 0x00000000	kernel_sock_ioctl	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	mb_cache_entry_insert	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	crc16	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nfnetlink_unicast	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_put_request	vmlinux	EXPORT_SYMBOL
 0x00000000	async_synchronize_full_domain	vmlinux	EXPORT_SYMBOL_GPL
@@ -1110,21 +1027,12 @@
 0x00000000	block_page_mkwrite	vmlinux	EXPORT_SYMBOL
 0x00000000	uart_unregister_driver	vmlinux	EXPORT_SYMBOL
 0x00000000	crypto_spawn_tfm	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_chk_prefix	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ipv6_chk_prefix	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	inet_csk_search_req	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	inet_unhash	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_execute_rq	vmlinux	EXPORT_SYMBOL
-0x00000000	ip6_xmit	net/ipv6/ipv6	EXPORT_SYMBOL
 0x00000000	vsscanf	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_xmit	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	tcf_exts_dump	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	seq_open_net	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sysctl_vfs_cache_pressure	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	rcu_batches_completed	vmlinux	EXPORT_SYMBOL_GPL
@@ -1158,12 +1066,7 @@
 0x00000000	blk_recount_segments	vmlinux	EXPORT_SYMBOL
 0x00000000	simple_statfs	vmlinux	EXPORT_SYMBOL
 0x00000000	param_set_long	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_tunnel_deregister	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_tunnel_deregister	net/ipv6/tunnel6	EXPORT_SYMBOL
-0x00000000	xfrm4_tunnel_deregister	net/ipv4/tunnel4	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	km_policy_notify	vmlinux	EXPORT_SYMBOL
 0x00000000	xfrm4_tunnel_deregister	vmlinux	EXPORT_SYMBOL
 0x00000000	ip_mc_join_group	vmlinux	EXPORT_SYMBOL
@@ -1234,7 +1137,6 @@
 0x00000000	ida_remove	vmlinux	EXPORT_SYMBOL
 0x00000000	param_get_invbool	vmlinux	EXPORT_SYMBOL
 0x00000000	init_mm	vmlinux	EXPORT_SYMBOL
-0x00000000	ct_sip_parse_numerical_param	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	devres_destroy	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tty_hangup	vmlinux	EXPORT_SYMBOL
 0x00000000	tty_termios_copy_hw	vmlinux	EXPORT_SYMBOL
@@ -1269,11 +1171,7 @@
 0x00000000	__put_user_2	vmlinux	EXPORT_SYMBOL
 0x00000000	map_vm_area	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	unregister_shrinker	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_dev_get_saddr	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ipv6_dev_get_saddr	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xfrm_policy_flush	vmlinux	EXPORT_SYMBOL
 0x00000000	tea5761_autodetection	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	call_usermodehelper_setkeys	vmlinux	EXPORT_SYMBOL
@@ -1291,11 +1189,7 @@
 0x00000000	mmc_request_done	vmlinux	EXPORT_SYMBOL
 0x00000000	lease_get_mtime	vmlinux	EXPORT_SYMBOL
 0x00000000	sb_set_blocksize	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_sk_dst_lookup	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ip6_sk_dst_lookup	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	sdio_writew	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	vmalloc_to_pfn	vmlinux	EXPORT_SYMBOL
 0x00000000	get_task_mm	vmlinux	EXPORT_SYMBOL_GPL
@@ -1310,11 +1204,7 @@
 0x00000000	get_empty_filp	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_file_aio_write	vmlinux	EXPORT_SYMBOL
 0x00000000	gpio_get_value	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_prepare_output	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_prepare_output	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xfrm_calg_get_byname	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	xfrm4_prepare_output	vmlinux	EXPORT_SYMBOL
 0x00000000	copy_io_context	vmlinux	EXPORT_SYMBOL
@@ -1349,7 +1239,6 @@
 0x00000000	sdio_register_driver	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	set_security_override_from_ctx	vmlinux	EXPORT_SYMBOL
 0x00000000	sk_wait_data	vmlinux	EXPORT_SYMBOL
-0x00000000	tda18271_attach	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ring_buffer_empty_cpu	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	xt_replace_table	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	v4l2_int_device_register	vmlinux	EXPORT_SYMBOL_GPL
@@ -1384,11 +1273,7 @@
 0x00000000	i2c_bus_type	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	do_truncate	vmlinux	EXPORT_SYMBOL
 0x00000000	daemonize	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	icmpv6_send	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	icmpv6_send	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	video_device_release_empty	vmlinux	EXPORT_SYMBOL
 0x00000000	put_driver	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_queue_make_request	vmlinux	EXPORT_SYMBOL
@@ -1426,16 +1311,11 @@
 0x00000000	fput	vmlinux	EXPORT_SYMBOL
 0x00000000	platform_device_alloc	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	posix_timer_event	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_frag_init	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ip6_frag_init	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	netlink_change_ngroups	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_set_features	vmlinux	EXPORT_SYMBOL
 0x00000000	add_disk	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_shutdown	vmlinux	EXPORT_SYMBOL
-0x00000000	xt_rateest_put	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	posix_lock_file_wait	vmlinux	EXPORT_SYMBOL
 0x00000000	strnicmp	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_csk_clone	vmlinux	EXPORT_SYMBOL_GPL
@@ -1451,17 +1331,12 @@
 0x00000000	switch_set_state	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	add_wait_queue_exclusive	vmlinux	EXPORT_SYMBOL
 0x00000000	nf_nat_icmp_reply_translation	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	ct_sip_get_sdp_header	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crc_ccitt_table	vmlinux	EXPORT_SYMBOL
 0x00000000	print_hex_dump_bytes	vmlinux	EXPORT_SYMBOL
 0x00000000	utf8_wcstombs	vmlinux	EXPORT_SYMBOL
 0x00000000	d_add_ci	vmlinux	EXPORT_SYMBOL
 0x00000000	register_posix_clock	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	net_ipv6_ctl_path	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	net_ipv6_ctl_path	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	net_ipv4_ctl_path	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	netdev_set_master	vmlinux	EXPORT_SYMBOL
 0x00000000	__skb_checksum_complete_head	vmlinux	EXPORT_SYMBOL
@@ -1472,7 +1347,7 @@
 0x00000000	vmalloc	vmlinux	EXPORT_SYMBOL
 0x00000000	__raw_readsl	vmlinux	EXPORT_SYMBOL
 0x00000000	tty_port_raise_dtr_rts	vmlinux	EXPORT_SYMBOL
-0x00000000	ct_sip_parse_request	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	mb_cache_entry_find_first	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_unregister_congestion_control	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	napi_fraginfo_skb	vmlinux	EXPORT_SYMBOL
 0x00000000	ppp_unregister_compressor	vmlinux	EXPORT_SYMBOL
@@ -1512,7 +1387,6 @@
 0x00000000	nf_conntrack_find_get	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	simple_empty	vmlinux	EXPORT_SYMBOL
 0x00000000	xfrm_cfg_mutex	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sip_expect_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__sk_mem_schedule	vmlinux	EXPORT_SYMBOL
 0x00000000	__hid_register_driver	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	radix_tree_gang_lookup_tag_slot	vmlinux	EXPORT_SYMBOL
@@ -1538,15 +1412,10 @@
 0x00000000	remove_wait_queue	vmlinux	EXPORT_SYMBOL
 0x00000000	param_array_set	vmlinux	EXPORT_SYMBOL
 0x00000000	param_array_get	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sdp_addr_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sk_stream_write_space	vmlinux	EXPORT_SYMBOL
 0x00000000	sysdev_resume	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sysfs_notify_dirent	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_dup_options	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipv6_dup_options	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	add_mtd_blktrans_dev	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__div0	vmlinux	EXPORT_SYMBOL
 0x00000000	zap_vma_ptes	vmlinux	EXPORT_SYMBOL_GPL
@@ -1560,11 +1429,6 @@
 0x00000000	__iounmap	vmlinux	EXPORT_SYMBOL
 0x00000000	__sk_mem_reclaim	vmlinux	EXPORT_SYMBOL
 0x00000000	d_prune_aliases	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	usleep_range	vmlinux	EXPORT_SYMBOL
-0x00000000	tcf_hash_check	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	memcpy_fromiovecend	vmlinux	EXPORT_SYMBOL
 0x00000000	__pagevec_release	vmlinux	EXPORT_SYMBOL
 0x00000000	init_timer_deferrable	vmlinux	EXPORT_SYMBOL
@@ -1602,10 +1466,6 @@
 0x00000000	pmic_set_speaker_delay	vmlinux	EXPORT_SYMBOL
 0x00000000	__iowrite32_copy	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	fp_send_sig	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	ct_sip_parse_address_param	vmlinux	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	fib_rules_register	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	bitrev32	vmlinux	EXPORT_SYMBOL
 0x00000000	simple_transaction_read	vmlinux	EXPORT_SYMBOL
@@ -1666,8 +1526,6 @@
 0x00000000	posix_unblock_lock	vmlinux	EXPORT_SYMBOL
 0x00000000	__mnt_is_readonly	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tcp_close	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sip_hook	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	nf_nat_irc_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	nf_nat_ftp_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__scm_send	vmlinux	EXPORT_SYMBOL
 0x00000000	try_to_free_buffers	vmlinux	EXPORT_SYMBOL
@@ -1684,12 +1542,7 @@
 0x00000000	call_rcu	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crypto_nivaead_type	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	bdi_writeout_inc	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_rcv_spi	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_rcv_spi	net/ipv6/ipv6	EXPORT_SYMBOL
-0x00000000	tcf_exts_change	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	crypto_register_notifier	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	dma_release_from_coherent	vmlinux	EXPORT_SYMBOL
 0x00000000	do_posix_clock_nonanosleep	vmlinux	EXPORT_SYMBOL_GPL
@@ -1761,7 +1614,6 @@
 0x00000000	random32	vmlinux	EXPORT_SYMBOL
 0x00000000	skcipher_geniv_free	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	vfs_llseek	vmlinux	EXPORT_SYMBOL
-0x00000000	hr_msleep	vmlinux	EXPORT_SYMBOL
 0x00000000	bt_sock_unlink	vmlinux	EXPORT_SYMBOL
 0x00000000	blocking_notifier_chain_cond_register	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__xfrm_state_destroy	vmlinux	EXPORT_SYMBOL
@@ -1804,11 +1656,7 @@
 0x00000000	preempt_schedule	vmlinux	EXPORT_SYMBOL
 0x00000000	radix_tree_delete	vmlinux	EXPORT_SYMBOL
 0x00000000	__cap_full_set	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	tcp6_gro_receive	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	tcp6_gro_receive	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	tcp_slow_start	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tcp4_gro_receive	vmlinux	EXPORT_SYMBOL
 0x00000000	proc_net_netfilter	vmlinux	EXPORT_SYMBOL
@@ -1833,13 +1681,8 @@
 0x00000000	debugfs_rename	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	single_open	vmlinux	EXPORT_SYMBOL
 0x00000000	page_follow_link_light	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_tunnel_free_spi	vmlinux	EXPORT_SYMBOL
 0x00000000	xfrm6_find_1stfragopt	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_tunnel_free_spi	net/ipv6/xfrm6_tunnel	EXPORT_SYMBOL
-0x00000000	xfrm6_find_1stfragopt	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	kthread_stop	vmlinux	EXPORT_SYMBOL
 0x00000000	find_task_by_vpid	vmlinux	EXPORT_SYMBOL
 0x00000000	dm_register_target	vmlinux	EXPORT_SYMBOL
@@ -1877,7 +1720,6 @@
 0x00000000	platform_bus_type	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_rq_map_user	vmlinux	EXPORT_SYMBOL
 0x00000000	bt_accept_unlink	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_ct_gre_keymap_add	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	d_find_alias	vmlinux	EXPORT_SYMBOL
 0x00000000	yield	vmlinux	EXPORT_SYMBOL
 0x00000000	xt_check_target	vmlinux	EXPORT_SYMBOL_GPL
@@ -1896,21 +1738,13 @@
 0x00000000	input_register_handler	vmlinux	EXPORT_SYMBOL
 0x00000000	textsearch_unregister	vmlinux	EXPORT_SYMBOL
 0x00000000	dma_pool_free	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_csk_bind_conflict	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_csk_bind_conflict	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	ipv4_config	vmlinux	EXPORT_SYMBOL
 0x00000000	netif_carrier_on	vmlinux	EXPORT_SYMBOL
 0x00000000	fib_rules_lookup	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__bitmap_full	vmlinux	EXPORT_SYMBOL
 0x00000000	print_hex_dump	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_route_output	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ip6_route_output	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	__rta_fill	vmlinux	EXPORT_SYMBOL
 0x00000000	__dst_free	vmlinux	EXPORT_SYMBOL
 0x00000000	strncmp	vmlinux	EXPORT_SYMBOL
@@ -1934,11 +1768,7 @@
 0x00000000	sk_run_filter	vmlinux	EXPORT_SYMBOL
 0x00000000	netdev_rx_csum_fault	vmlinux	EXPORT_SYMBOL
 0x00000000	devres_release_group	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_push_nfrag_opts	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ipv6_push_nfrag_opts	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	ipt_register_table	vmlinux	EXPORT_SYMBOL
 0x00000000	neigh_sysctl_unregister	vmlinux	EXPORT_SYMBOL
 0x00000000	fb_destroy_modelist	vmlinux	EXPORT_SYMBOL_GPL
@@ -1947,11 +1777,7 @@
 0x00000000	d_move	vmlinux	EXPORT_SYMBOL
 0x00000000	ring_buffer_read_start	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__aeabi_idivmod	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipcomp_destroy	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipcomp_destroy	net/xfrm/xfrm_ipcomp	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	touch_atime	vmlinux	EXPORT_SYMBOL
 0x00000000	get_cpu_idle_time_us	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	strstr	vmlinux	EXPORT_SYMBOL
@@ -1977,7 +1803,6 @@
 0x00000000	__arm_ioremap_pfn	vmlinux	EXPORT_SYMBOL
 0x00000000	eth_header_parse	vmlinux	EXPORT_SYMBOL
 0x00000000	eth_change_mtu	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_pptp_hook_exp_gre	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	nf_conntrack_hash_insert	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sock_wake_async	vmlinux	EXPORT_SYMBOL
 0x00000000	wake_lock_timeout	vmlinux	EXPORT_SYMBOL
@@ -2123,19 +1948,11 @@
 0x00000000	mntput_no_expire	vmlinux	EXPORT_SYMBOL
 0x00000000	__get_free_pages	vmlinux	EXPORT_SYMBOL
 0x00000000	disallow_signal	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	rawv6_mh_filter_register	vmlinux	EXPORT_SYMBOL
 0x00000000	sysctl_ip_nonlocal_bind	vmlinux	EXPORT_SYMBOL
 0x00000000	nf_ct_expect_related	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	proc_net_fops_create	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	rawv6_mh_filter_unregister	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	rawv6_mh_filter_register	net/ipv6/ipv6	EXPORT_SYMBOL
-0x00000000	sysctl_ip_nonlocal_bind	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_ct_expect_related	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	proc_net_fops_create	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	rawv6_mh_filter_unregister	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	blk_queue_resize_tags	vmlinux	EXPORT_SYMBOL
 0x00000000	__fatal_signal_pending	vmlinux	EXPORT_SYMBOL
 0x00000000	ipv4_specific	vmlinux	EXPORT_SYMBOL
@@ -2156,11 +1973,7 @@
 0x00000000	generic_ro_fops	vmlinux	EXPORT_SYMBOL
 0x00000000	wake_lock	vmlinux	EXPORT_SYMBOL
 0x00000000	kthread_bind	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_setsockopt	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ipv6_setsockopt	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	del_mtd_blktrans_dev	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	inet_frag_find	vmlinux	EXPORT_SYMBOL
 0x00000000	inetdev_by_index	vmlinux	EXPORT_SYMBOL
@@ -2186,11 +1999,7 @@
 0x00000000	sysfs_get_dirent	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	destroy_workqueue	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	call_usermodehelper_pipe	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_csk_reqsk_queue_hash_add	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_csk_reqsk_queue_hash_add	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	inet_twsk_put	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	fib_default_rule_add	vmlinux	EXPORT_SYMBOL
 0x00000000	do_SAK	vmlinux	EXPORT_SYMBOL
@@ -2204,14 +2013,9 @@
 0x00000000	get_option	vmlinux	EXPORT_SYMBOL
 0x00000000	km_state_expired	vmlinux	EXPORT_SYMBOL
 0x00000000	netdev_resync_ops	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	register_inet6addr_notifier	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	register_inet6addr_notifier	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	inet_accept	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_select_initial_window	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_ct_gre_keymap_destroy	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	register_pernet_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	class_for_each_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	up_read	vmlinux	EXPORT_SYMBOL
@@ -2257,11 +2061,7 @@
 0x00000000	sdio_readsb	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	rtc_set_time	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__set_irq_handler	vmlinux	EXPORT_SYMBOL_GPL
-<<<<<<< HEAD:Module.symvers
 0x00000000	icmpv6_err_convert	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	icmpv6_err_convert	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	fb_get_mode	vmlinux	EXPORT_SYMBOL
 0x00000000	do_sync_write	vmlinux	EXPORT_SYMBOL
 0x00000000	vfs_readv	vmlinux	EXPORT_SYMBOL
@@ -2298,7 +2098,6 @@
 0x00000000	anon_inode_getfd	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	filemap_flush	vmlinux	EXPORT_SYMBOL
 0x00000000	slhc_toss	vmlinux	EXPORT_SYMBOL
-0x00000000	fuse_conn_init	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tcp_set_state	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	unregister_pernet_gen_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	i2c_smbus_read_i2c_block_data	vmlinux	EXPORT_SYMBOL
@@ -2313,18 +2112,12 @@
 0x00000000	sched_setscheduler	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	strict_strtol	vmlinux	EXPORT_SYMBOL
 0x00000000	inode_double_lock	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipcomp_input	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ip_mc_rejoin_group	vmlinux	EXPORT_SYMBOL
 0x00000000	udp_prot	vmlinux	EXPORT_SYMBOL
 0x00000000	inet6_sk_rebuild_header	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipcomp_input	net/xfrm/xfrm_ipcomp	EXPORT_SYMBOL_GPL
-0x00000000	ip_mc_rejoin_group	vmlinux	EXPORT_SYMBOL
-0x00000000	udp_prot	vmlinux	EXPORT_SYMBOL
-0x00000000	inet6_sk_rebuild_header	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	sdio_reset_comm	vmlinux	EXPORT_SYMBOL
+0x00000000	mb_cache_shrink	vmlinux	EXPORT_SYMBOL
 0x00000000	avenrun	vmlinux	EXPORT_SYMBOL
 0x00000000	__msm_ioremap	vmlinux	EXPORT_SYMBOL
 0x00000000	__arm_ioremap	vmlinux	EXPORT_SYMBOL
@@ -2349,6 +2142,7 @@
 0x00000000	blk_queue_update_dma_pad	vmlinux	EXPORT_SYMBOL
 0x00000000	utf8_mbtowc	vmlinux	EXPORT_SYMBOL
 0x00000000	open_exec	vmlinux	EXPORT_SYMBOL
+0x00000000	mb_cache_entry_find_next	vmlinux	EXPORT_SYMBOL
 0x00000000	dev_unicast_delete	vmlinux	EXPORT_SYMBOL
 0x00000000	unlock_kernel	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_forget	vmlinux	EXPORT_SYMBOL
@@ -2493,6 +2287,7 @@
 0x00000000	register_netdev	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_twsk_purge	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__bitmap_andnot	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_from_xattr	vmlinux	EXPORT_SYMBOL
 0x00000000	skb_seq_read	vmlinux	EXPORT_SYMBOL
 0x00000000	i2c_transfer	vmlinux	EXPORT_SYMBOL
 0x00000000	param_set_int	vmlinux	EXPORT_SYMBOL
@@ -2533,11 +2328,7 @@
 0x00000000	ethtool_op_get_tx_csum	vmlinux	EXPORT_SYMBOL
 0x00000000	skb_to_sgvec	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__breadahead	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	icmpv6_statistics	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	icmpv6_statistics	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	led_classdev_suspend	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	journal_stop	vmlinux	EXPORT_SYMBOL
 0x00000000	inotify_add_watch	vmlinux	EXPORT_SYMBOL_GPL
@@ -2622,11 +2413,7 @@
 0x00000000	string_get_size	vmlinux	EXPORT_SYMBOL
 0x00000000	fat_fill_super	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	register_exec_domain	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	fl6_sock_lookup	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	fl6_sock_lookup	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	sg_alloc_table	vmlinux	EXPORT_SYMBOL
 0x00000000	async_synchronize_cookie_domain	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	call_usermodehelper_exec	vmlinux	EXPORT_SYMBOL
@@ -2694,11 +2481,7 @@
 0x00000000	blk_queue_dma_pad	vmlinux	EXPORT_SYMBOL
 0x00000000	set_current_groups	vmlinux	EXPORT_SYMBOL
 0x00000000	wait_for_completion_timeout	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	xfrm6_input_addr	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	xfrm6_input_addr	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	__nf_conntrack_helper_find_byname	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sprint_symbol	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	kref_set	vmlinux	EXPORT_SYMBOL
@@ -2735,7 +2518,6 @@
 0x00000000	can_do_mlock	vmlinux	EXPORT_SYMBOL
 0x00000000	__print_symbol	vmlinux	EXPORT_SYMBOL
 0x00000000	rcu_barrier	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	ndisc_mc_map	net/ipv6/ipv6	EXPORT_SYMBOL
 0x00000000	sprintf	vmlinux	EXPORT_SYMBOL
 0x00000000	ndisc_mc_map	vmlinux	EXPORT_SYMBOL
 0x00000000	v4l2_ctrl_query_menu	vmlinux	EXPORT_SYMBOL
@@ -2744,6 +2526,7 @@
 0x00000000	simple_unlink	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_listxattr	vmlinux	EXPORT_SYMBOL
 0x00000000	net_ratelimit	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_valid	vmlinux	EXPORT_SYMBOL
 0x00000000	invalidate_inode_buffers	vmlinux	EXPORT_SYMBOL
 0x00000000	crypto_shash_update	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	journal_dirty_data	vmlinux	EXPORT_SYMBOL
@@ -2760,11 +2543,7 @@
 0x00000000	netdev_class_remove_file	vmlinux	EXPORT_SYMBOL
 0x00000000	crypto_hash_type	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	journal_ack_err	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_csk_addr2sockaddr	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_csk_addr2sockaddr	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	devres_close_group	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__blk_end_request	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	klist_next	vmlinux	EXPORT_SYMBOL_GPL
@@ -2786,11 +2565,7 @@
 0x00000000	enable_hlt	vmlinux	EXPORT_SYMBOL
 0x00000000	dev_alloc_skb	vmlinux	EXPORT_SYMBOL
 0x00000000	memchr	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_release	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_release	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nf_ct_expect_hsize	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	vfs_kern_mount	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ring_buffer_record_enable_cpu	vmlinux	EXPORT_SYMBOL_GPL
@@ -2806,11 +2581,7 @@
 0x00000000	sysfs_streq	vmlinux	EXPORT_SYMBOL
 0x00000000	alloc_buffer_head	vmlinux	EXPORT_SYMBOL
 0x00000000	inode_setattr	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	tcp6_gro_complete	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	tcp6_gro_complete	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	tcp4_gro_complete	vmlinux	EXPORT_SYMBOL
 0x00000000	ip_route_input	vmlinux	EXPORT_SYMBOL
 0x00000000	device_remove_file	vmlinux	EXPORT_SYMBOL_GPL
@@ -2820,11 +2591,7 @@
 0x00000000	param_get_ulong	vmlinux	EXPORT_SYMBOL
 0x00000000	kill_pid	vmlinux	EXPORT_SYMBOL
 0x00000000	pmic_secure_mpp_config_digital_input	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	rt6_lookup	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	rt6_lookup	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	inet_frags_init_net	vmlinux	EXPORT_SYMBOL
 0x00000000	slhc_free	vmlinux	EXPORT_SYMBOL
 0x00000000	congestion_wait	vmlinux	EXPORT_SYMBOL
@@ -2854,6 +2621,7 @@
 0x00000000	mmc_set_data_timeout	vmlinux	EXPORT_SYMBOL
 0x00000000	strncat	vmlinux	EXPORT_SYMBOL
 0x00000000	strlcat	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_chmod_masq	vmlinux	EXPORT_SYMBOL
 0x00000000	kthread_should_stop	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_rq_map_kern	vmlinux	EXPORT_SYMBOL
 0x00000000	sync_mapping_buffers	vmlinux	EXPORT_SYMBOL
@@ -2863,10 +2631,6 @@
 0x00000000	datagram_poll	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_queue_end_tag	vmlinux	EXPORT_SYMBOL
 0x00000000	__up_read	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	__tcf_em_tree_match	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	flush_old_exec	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_addr_type	vmlinux	EXPORT_SYMBOL
 0x00000000	mii_link_ok	vmlinux	EXPORT_SYMBOL
@@ -2891,7 +2655,6 @@
 0x00000000	hid_parse_report	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	seq_bitmap_list	vmlinux	EXPORT_SYMBOL
 0x00000000	alloc_pages_exact	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sdp_media_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__nla_reserve	vmlinux	EXPORT_SYMBOL
 0x00000000	alloc_chrdev_region	vmlinux	EXPORT_SYMBOL
 0x00000000	rb_next	vmlinux	EXPORT_SYMBOL
@@ -2923,10 +2686,6 @@
 0x00000000	bus_sort_breadthfirst	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tcp_v4_connect	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_sync_mss	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	ct_sip_get_header	vmlinux	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	emergency_restart	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	local_bh_disable	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_death_row	vmlinux	EXPORT_SYMBOL_GPL
@@ -2952,6 +2711,7 @@
 0x00000000	unregister_pm_notifier	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	inet_unregister_protosw	vmlinux	EXPORT_SYMBOL
 0x00000000	i2c_smbus_read_byte	vmlinux	EXPORT_SYMBOL
+0x00000000	mb_cache_entry_free	vmlinux	EXPORT_SYMBOL
 0x00000000	ethtool_op_get_flags	vmlinux	EXPORT_SYMBOL
 0x00000000	blkcipher_walk_phys	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	hci_conn_check_link_mode	vmlinux	EXPORT_SYMBOL
@@ -3024,11 +2784,7 @@
 0x00000000	platform_device_add	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	debugfs_create_size_t	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	remove_proc_entry	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_opt_accepted	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipv6_opt_accepted	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	xfrm_spd_getinfo	vmlinux	EXPORT_SYMBOL
 0x00000000	bd_release_from_disk	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	block_is_partially_uptodate	vmlinux	EXPORT_SYMBOL
@@ -3036,10 +2792,6 @@
 0x00000000	uart_resume_port	vmlinux	EXPORT_SYMBOL
 0x00000000	inode_add_to_lists	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	bdi_register_dev	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	xt_rateest_lookup	vmlinux	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	pagecache_write_end	vmlinux	EXPORT_SYMBOL
 0x00000000	tracepoint_iter_reset	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sdio_f0_readb	vmlinux	EXPORT_SYMBOL_GPL
@@ -3105,11 +2857,7 @@
 0x00000000	aead_geniv_alloc	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	mtd_table	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	dma_release_declared_memory	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_csk_xmit	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	inet6_csk_xmit	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	tcp_ioctl	vmlinux	EXPORT_SYMBOL
 0x00000000	registered_fb	vmlinux	EXPORT_SYMBOL
 0x00000000	vfs_symlink	vmlinux	EXPORT_SYMBOL
@@ -3136,6 +2884,7 @@
 0x00000000	set_normalized_timespec	vmlinux	EXPORT_SYMBOL
 0x00000000	eth_type_trans	vmlinux	EXPORT_SYMBOL
 0x00000000	debugfs_create_blob	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	mb_cache_entry_get	vmlinux	EXPORT_SYMBOL
 0x00000000	vm_insert_mixed	vmlinux	EXPORT_SYMBOL
 0x00000000	send_sig	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_shutdown	vmlinux	EXPORT_SYMBOL
@@ -3174,7 +2923,6 @@
 0x00000000	journal_clear_err	vmlinux	EXPORT_SYMBOL
 0x00000000	cancel_work_sync	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sysctl_tcp_reordering	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_ct_gre_keymap_flush	vmlinux	EXPORT_SYMBOL
 0x00000000	input_set_keycode	vmlinux	EXPORT_SYMBOL
 0x00000000	radix_tree_preload	vmlinux	EXPORT_SYMBOL
 0x00000000	blkdev_ioctl	vmlinux	EXPORT_SYMBOL_GPL
@@ -3204,11 +2952,7 @@
 0x00000000	net_namespace_list	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	sock_register	vmlinux	EXPORT_SYMBOL
 0x00000000	loop_register_transfer	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_register_protosw	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_register_protosw	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nfnl_lock	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	register_mtd_blktrans	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	ip_nat_decode_session	vmlinux	EXPORT_SYMBOL
@@ -3253,11 +2997,7 @@
 0x00000000	input_open_device	vmlinux	EXPORT_SYMBOL
 0x00000000	fsync_bdev	vmlinux	EXPORT_SYMBOL
 0x00000000	gpio_free	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ip6_dst_lookup	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ip6_dst_lookup	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	i2c_new_device	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	device_for_each_child	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	timespec_to_jiffies	vmlinux	EXPORT_SYMBOL
@@ -3406,6 +3146,7 @@
 0x00000000	blkdev_issue_flush	vmlinux	EXPORT_SYMBOL
 0x00000000	crypto_init_queue	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	default_backing_dev_info	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	posix_acl_clone	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_drop_inode	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	find_inode_number	vmlinux	EXPORT_SYMBOL
 0x00000000	hci_unregister_dev	vmlinux	EXPORT_SYMBOL
@@ -3432,6 +3173,7 @@
 0x00000000	max_mapnr	vmlinux	EXPORT_SYMBOL
 0x00000000	led_trigger_set	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	v4l2_int_ioctl_1	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	mb_cache_create	vmlinux	EXPORT_SYMBOL
 0x00000000	inotify_find_update_watch	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	iunique	vmlinux	EXPORT_SYMBOL
 0x00000000	unregister_die_notifier	vmlinux	EXPORT_SYMBOL_GPL
@@ -3439,6 +3181,7 @@
 0x00000000	inet_dgram_ops	vmlinux	EXPORT_SYMBOL
 0x00000000	input_release_device	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_alloc_queue	vmlinux	EXPORT_SYMBOL
+0x00000000	mb_cache_destroy	vmlinux	EXPORT_SYMBOL
 0x00000000	get_unused_fd	vmlinux	EXPORT_SYMBOL
 0x00000000	proc_doulongvec_minmax	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_proc_unregister	vmlinux	EXPORT_SYMBOL
@@ -3448,14 +3191,11 @@
 0x00000000	local_bh_enable_ip	vmlinux	EXPORT_SYMBOL
 0x00000000	xfrm4_rcv_encap	vmlinux	EXPORT_SYMBOL
 0x00000000	udp_poll	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_from_mode	vmlinux	EXPORT_SYMBOL
 0x00000000	kstrndup	vmlinux	EXPORT_SYMBOL
 0x00000000	wake_lock_active	vmlinux	EXPORT_SYMBOL
 0x00000000	console_stop	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_getname	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_getname	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nf_conntrack_tuple_taken	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	task_pid_nr_ns	vmlinux	EXPORT_SYMBOL
 0x00000000	register_mtd_user	vmlinux	EXPORT_SYMBOL_GPL
@@ -3486,7 +3226,6 @@
 0x00000000	dev_alloc_name	vmlinux	EXPORT_SYMBOL
 0x00000000	iov_iter_copy_from_user	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_fh_to_dentry	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	ipcomp_output	net/xfrm/xfrm_ipcomp	EXPORT_SYMBOL_GPL
 0x00000000	rfkill_force_state	vmlinux	EXPORT_SYMBOL
 0x00000000	ipcomp_output	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	nf_ct_expect_related_report	vmlinux	EXPORT_SYMBOL_GPL
@@ -3496,19 +3235,12 @@
 0x00000000	debugfs_create_x16	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	journal_create	vmlinux	EXPORT_SYMBOL
 0x00000000	ring_buffer_record_enable	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	inet6_destroy_sock	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
 0x00000000	strcat	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_destroy_sock	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	mb_cache_entry_release	vmlinux	EXPORT_SYMBOL
 0x00000000	ring_buffer_alloc	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	crypto_register_shash	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	inet6_unregister_protosw	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	ring_buffer_alloc	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	crypto_register_shash	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	inet6_unregister_protosw	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	nf_register_hooks	vmlinux	EXPORT_SYMBOL
 0x00000000	radix_tree_insert	vmlinux	EXPORT_SYMBOL
 0x00000000	vfs_listxattr	vmlinux	EXPORT_SYMBOL_GPL
@@ -3525,7 +3257,6 @@
 0x00000000	tcp_register_congestion_control	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tcp_gro_complete	vmlinux	EXPORT_SYMBOL
 0x00000000	nf_conntrack_alloc	vmlinux	EXPORT_SYMBOL_GPL
-0x00000000	tda827x_attach	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	register_sysrq_key	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_connect	vmlinux	EXPORT_SYMBOL
 0x00000000	neigh_table_clear	vmlinux	EXPORT_SYMBOL
@@ -3553,11 +3284,7 @@
 0x00000000	skb_abort_seq_read	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_restart	vmlinux	EXPORT_SYMBOL
 0x00000000	journal_destroy	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_ioctl	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_ioctl	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	tcp_getsockopt	vmlinux	EXPORT_SYMBOL
 0x00000000	tcp_setsockopt	vmlinux	EXPORT_SYMBOL
 0x00000000	rtnl_unicast	vmlinux	EXPORT_SYMBOL
@@ -3594,22 +3321,18 @@
 0x00000000	msecs_to_jiffies	vmlinux	EXPORT_SYMBOL
 0x00000000	misc_deregister	vmlinux	EXPORT_SYMBOL
 0x00000000	lookup_one_len	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	inet6_bind	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	inet6_bind	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	register_inetaddr_notifier	vmlinux	EXPORT_SYMBOL
 0x00000000	fb_parse_edid	vmlinux	EXPORT_SYMBOL
 0x00000000	devres_add	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	devres_get	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	journal_wipe	vmlinux	EXPORT_SYMBOL
 0x00000000	bt_accept_enqueue	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_sdp_session_hook	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	v4l2_device_register_subdev	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	unregister_chrdev_region	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_writepages	vmlinux	EXPORT_SYMBOL
 0x00000000	htc_pwrsink_set	vmlinux	EXPORT_SYMBOL
+0x00000000	posix_acl_equiv_mode	vmlinux	EXPORT_SYMBOL
 0x00000000	board_mfg_mode	vmlinux	EXPORT_SYMBOL
 0x00000000	rtnl_register	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	lookup_bdev	vmlinux	EXPORT_SYMBOL
@@ -3649,6 +3372,7 @@
 0x00000000	tcp_poll	vmlinux	EXPORT_SYMBOL
 0x00000000	generic_splice_sendpage	vmlinux	EXPORT_SYMBOL
 0x00000000	attribute_container_find_class_device	vmlinux	EXPORT_SYMBOL_GPL
+0x00000000	posix_acl_create_masq	vmlinux	EXPORT_SYMBOL
 0x00000000	grab_cache_page_write_begin	vmlinux	EXPORT_SYMBOL
 0x00000000	rt_mutex_lock_interruptible	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	__get_user_1	vmlinux	EXPORT_SYMBOL
@@ -3706,7 +3430,6 @@
 0x00000000	fat_setattr	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	generic_read_dir	vmlinux	EXPORT_SYMBOL
 0x00000000	dentry_unhash	vmlinux	EXPORT_SYMBOL
-0x00000000	ct_sip_parse_header_uri	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	do_splice_to	vmlinux	EXPORT_SYMBOL
 0x00000000	ring_buffer_time_stamp	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	xfrm_ealg_get_byidx	vmlinux	EXPORT_SYMBOL_GPL
@@ -3766,10 +3489,6 @@
 0x00000000	km_query	vmlinux	EXPORT_SYMBOL
 0x00000000	inet_release	vmlinux	EXPORT_SYMBOL
 0x00000000	blk_queue_start_tag	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
-=======
-0x00000000	hr_msleep_interruptible	vmlinux	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	neigh_create	vmlinux	EXPORT_SYMBOL
 0x00000000	msm_v4l2_register	vmlinux	EXPORT_SYMBOL
 0x00000000	fb_notifier_call_chain	vmlinux	EXPORT_SYMBOL_GPL
@@ -3787,22 +3506,13 @@
 0x00000000	ip_route_output_key	vmlinux	EXPORT_SYMBOL
 0x00000000	fat_fs_error	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	seq_list_next	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	unregister_inet6addr_notifier	vmlinux	EXPORT_SYMBOL
 0x00000000	ipv6_chk_addr	vmlinux	EXPORT_SYMBOL
-=======
-0x00000000	unregister_inet6addr_notifier	net/ipv6/ipv6	EXPORT_SYMBOL
-0x00000000	ipv6_chk_addr	net/ipv6/ipv6	EXPORT_SYMBOL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	uart_suspend_port	vmlinux	EXPORT_SYMBOL
 0x00000000	__blkdev_driver_ioctl	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	blk_alloc_queue_node	vmlinux	EXPORT_SYMBOL
 0x00000000	bio_phys_segments	vmlinux	EXPORT_SYMBOL
-<<<<<<< HEAD:Module.symvers
 0x00000000	ipv6_find_tlv	vmlinux	EXPORT_SYMBOL_GPL
-=======
-0x00000000	ipv6_find_tlv	net/ipv6/ipv6	EXPORT_SYMBOL_GPL
->>>>>>> fbe57d6... Patch up to .330 for shits and giggles:Module.symvers
 0x00000000	neigh_changeaddr	vmlinux	EXPORT_SYMBOL
 0x00000000	skb_recycle_check	vmlinux	EXPORT_SYMBOL
 0x00000000	tty_unregister_ldisc	vmlinux	EXPORT_SYMBOL
@@ -3840,7 +3550,6 @@
 0x00000000	poll_freewait	vmlinux	EXPORT_SYMBOL
 0x00000000	si_meminfo	vmlinux	EXPORT_SYMBOL
 0x00000000	get_fs_type	vmlinux	EXPORT_SYMBOL
-0x00000000	nf_nat_pptp_hook_outbound	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	tty_driver_kref_put	vmlinux	EXPORT_SYMBOL
 0x00000000	sock_prot_inuse_get	vmlinux	EXPORT_SYMBOL_GPL
 0x00000000	aead_geniv_init	vmlinux	EXPORT_SYMBOL_GPL
