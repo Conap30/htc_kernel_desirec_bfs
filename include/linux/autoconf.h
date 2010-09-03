@@ -1,7 +1,11 @@
 /*
  * Automatically generated C config: don't edit
  * Linux kernel version: 2.6.29.6
+<<<<<<< HEAD:include/linux/autoconf.h
  * Thu Sep  2 20:16:05 2010
+=======
+ * Wed Sep  1 22:55:10 2010
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_VIDEO_V4L1_COMPAT 1
@@ -15,11 +19,16 @@
 #define CONFIG_CPU_FREQ_SAMPLING_LATENCY_MULTIPLIER 500
 #define CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION_DATA_SIZE 128
 #define CONFIG_BT_HCIUART 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_XFRM_MODE_BEET 1
+=======
+#define CONFIG_INET6_XFRM_MODE_BEET_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_MSM_AMSS_VERSION 4410
 #define CONFIG_CRYPTO_BLKCIPHER2 1
 #define CONFIG_VIDEO_V4L2_COMMON 1
 #define CONFIG_SERIAL_MSM_HS 1
+#define CONFIG_NF_NAT_PROTO_GRE 1
 #define CONFIG_CRYPTO_MD5 1
 #define CONFIG_FLATMEM 1
 #define CONFIG_BLK_DEV_DM 1
@@ -27,6 +36,7 @@
 #define CONFIG_VMSPLIT_3G 1
 #define CONFIG_TRACING 1
 #define CONFIG_REED_SOLOMON_DEC8 1
+#define CONFIG_NF_CONNTRACK_NETBIOS_NS 1
 #define CONFIG_HAVE_FUNCTION_TRACER 1
 #define CONFIG_I2C_MSM 1
 #define CONFIG_CRYPTO_ECB 1
@@ -36,16 +46,15 @@
 #define CONFIG_ENABLE_MUST_CHECK 1
 #define CONFIG_MEDIA_TUNER_XC5000 1
 #define CONFIG_SERIAL_MSM 1
+#define CONFIG_DM_CRYPT_GLOBAL_WORKQUEUES 1
 #define CONFIG_MTD_MAP_BANK_WIDTH_1 1
 #define CONFIG_EVENTFD 1
 #define CONFIG_BROKEN_ON_SMP 1
 #define CONFIG_NOP_TRACER 1
-#define CONFIG_EXT2_FS_XATTR 1
 #define CONFIG_STAGING 1
 #define CONFIG_HAS_DMA 1
 #define CONFIG_MTD_MAP_BANK_WIDTH_2 1
 #define CONFIG_NETFILTER_XT_MATCH_DSCP 1
-#define CONFIG_EXT3_FS_XATTR 1
 #define CONFIG_NETFILTER_XT_MATCH_MARK 1
 #define CONFIG_PPPOLAC 1
 #define CONFIG_MTD_MAP_BANK_WIDTH_4 1
@@ -55,7 +64,11 @@
 #define CONFIG_REED_SOLOMON_ENC8 1
 #define CONFIG_MMC_PARANOID_SD_INIT 1
 #define CONFIG_MEDIA_TUNER_XC2028 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_BCM4329_NVRAM_PATH "/proc/calibration"
+=======
+#define CONFIG_NF_NAT_IRC 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_FREEZER 1
 #define CONFIG_IP_NF_MATCH_ADDRTYPE 1
 #define CONFIG_NETFILTER_XT_MATCH_PKTTYPE 1
@@ -63,7 +76,7 @@
 #define CONFIG_NETDEV_10000 1
 #define CONFIG_NET_CLS_ROUTE 1
 #define CONFIG_BLK_DEV 1
-#define CONFIG_NETFILTER_XT_TARGET_TCPMSS 1
+#define CONFIG_NETFILTER_XT_TARGET_TCPMSS_MODULE 1
 #define CONFIG_HAS_IOPORT 1
 #define CONFIG_NF_CONNTRACK_IPV4 1
 #define CONFIG_HAVE_ARCH_KGDB 1
@@ -77,6 +90,7 @@
 #define CONFIG_EXT2_FS 1
 #define CONFIG_S5K3E2FX 1
 #define CONFIG_INPUT_MISC 1
+#define CONFIG_INET6_XFRM_MODE_ROUTEOPTIMIZATION_MODULE 1
 #define CONFIG_EXT3_FS 1
 #define CONFIG_CRYPTO_DES 1
 #define CONFIG_NETFILTER_XT_MATCH_SCTP 1
@@ -92,6 +106,7 @@
 #define CONFIG_ANDROID_LOGGER 1
 #define CONFIG_NF_CONNTRACK_MARK 1
 #define CONFIG_DEFCONFIG_LIST "/lib/modules/$UNAME_RELEASE/.config"
+#define CONFIG_NF_NAT_SIP 1
 #define CONFIG_NETFILTER_NETLINK 1
 #define CONFIG_DETECT_SOFTLOCKUP 1
 #define CONFIG_RADIO_ADAPTERS 1
@@ -102,17 +117,21 @@
 #define CONFIG_INOTIFY 1
 #define CONFIG_HAVE_LATENCYTOP_SUPPORT 1
 #define CONFIG_ANDROID_TIMED_OUTPUT 1
-#define CONFIG_USB_FUNCTION_DIAG 1
 #define CONFIG_FLATMEM_MANUAL 1
 #define CONFIG_HOTPLUG 1
 #define CONFIG_CGROUPS 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_IPV6 1
+=======
+#define CONFIG_IPV6_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_FLAT_NODE_MEM_MAP 1
 #define CONFIG_VFAT_FS 1
 #define CONFIG_MTD_CMDLINE_PARTS 1
 #define CONFIG_LOCALVERSION_AUTO 1
 #define CONFIG_SLHC 1
 #define CONFIG_EMBEDDED 1
+#define CONFIG_FUSE_FS 1
 #define CONFIG_OPROFILE_ARMV6 1
 #define CONFIG_BCM4329_FW_PATH "y"
 #define CONFIG_PROC_FS 1
@@ -128,29 +147,44 @@
 #define CONFIG_RT_MUTEXES 1
 #define CONFIG_INPUT_TOUCHSCREEN 1
 #define CONFIG_TCP_CONG_CUBIC 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_CRYPTO_DEFLATE 1
+=======
+#define CONFIG_CRYPTO_LZO 1
+#define CONFIG_CRYPTO_DEFLATE_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_ALIGNMENT_TRAP 1
 #define CONFIG_MMC_SDIO_EMAPI 1
 #define CONFIG_VIDEO_MEDIA 1
 #define CONFIG_CC_OPTIMIZE_FOR_SIZE 1
 #define CONFIG_PROC_PAGE_MONITOR 1
 #define CONFIG_ANDROID_PARANOID_NETWORK 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_XFRM_TUNNEL 1
+=======
+#define CONFIG_INET6_XFRM_TUNNEL_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_IOSCHED_BFQ 1
 #define CONFIG_SYS_SUPPORTS_APM_EMULATION 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_NET_ACT_POLICE 1
+#define CONFIG_NF_CONNTRACK_PPTP 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_PAGEFLAGS_EXTENDED 1
 #define CONFIG_WIFI_CONTROL_FUNC 1
 #define CONFIG_RESOURCE_COUNTERS 1
 #define CONFIG_CRYPTO_MANAGER 1
 #define CONFIG_HTC_BATTCHG 1
-#define CONFIG_SWAP 1
-#define CONFIG_EXT2_FS_POSIX_ACL 1
 #define CONFIG_NETFILTER_XT_MATCH_CONNMARK 1
 #define CONFIG_CPU_FREQ_TABLE 1
-#define CONFIG_EXT3_FS_POSIX_ACL 1
 #define CONFIG_XFRM 1
 #define CONFIG_CPU_CACHE_VIPT 1
 #define CONFIG_CRC32 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_CRC16 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_IP_NF_IPTABLES 1
 #define CONFIG_MSM7X00A_USE_GP_TIMER 1
 #define CONFIG_FAT_DEFAULT_IOCHARSET "iso8859-1"
@@ -193,7 +227,11 @@
 #define CONFIG_CRYPTO_SHA1 1
 #define CONFIG_ANON_INODES 1
 #define CONFIG_GENERIC_FIND_LAST_BIT 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_AH 1
+=======
+#define CONFIG_INET6_AH_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_MSM_DEBUG_UART 3
 #define CONFIG_SLABINFO 1
 #define CONFIG_ANDROID_BINDER_IPC 1
@@ -211,6 +249,7 @@
 #define CONFIG_GENERIC_HARDIRQS_NO__DO_IRQ 1
 #define CONFIG_NETFILTER_XT_MATCH_REALM 1
 #define CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION_POLYNOMIAL 0x11d
+#define CONFIG_NETFILTER_XT_TARGET_RATEEST 1
 #define CONFIG_HAVE_IDE 1
 #define CONFIG_NETFILTER_XT_TARGET_NFQUEUE 1
 #define CONFIG_VM_EVENT_COUNTERS 1
@@ -224,7 +263,11 @@
 #define CONFIG_MEDIA_TUNER_TEA5761 1
 #define CONFIG_CRYPTO_HMAC 1
 #define CONFIG_SENSORS_PCA963X 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_IPV6_TUNNEL 1
+=======
+#define CONFIG_IPV6_TUNNEL_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_INPUT_KEYRESET 1
 #define CONFIG_MSM_RPCSERVERS 1
 #define CONFIG_MSM_IDLE_STATS_FIRST_BUCKET 62500
@@ -237,6 +280,7 @@
 #define CONFIG_DEBUG_FS 1
 #define CONFIG_DEBUG_SG 1
 #define CONFIG_SWITCH_GPIO 1
+#define CONFIG_IPV6_MROUTE 1
 #define CONFIG_OPROFILE 1
 #define CONFIG_ANDROID_TIMED_GPIO 1
 #define CONFIG_MAGIC_SYSRQ 1
@@ -250,17 +294,23 @@
 #define CONFIG_CRYPTO_HASH 1
 #define CONFIG_UNIX98_PTYS 1
 #define CONFIG_NETFILTER_XT_MATCH_STATE 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_XFRM_IPCOMP 1
 #define CONFIG_FB_CFB_COPYAREA 1
 #define CONFIG_MEDIA_TUNER_TDA9887 1
 #define CONFIG_INET_TUNNEL 1
+=======
+#define CONFIG_XFRM_IPCOMP_MODULE 1
+#define CONFIG_FB_CFB_COPYAREA 1
+#define CONFIG_MEDIA_TUNER_TDA9887 1
+#define CONFIG_INET_TUNNEL_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_CPU_FREQ_GOV_ONDEMAND 1
 #define CONFIG_PRINTK_TIME 1
 #define CONFIG_FB_CFB_FILLRECT 1
 #define CONFIG_VIDEO_CAPTURE_DRIVERS 1
 #define CONFIG_NETFILTER_XT_TARGET_MARK 1
 #define CONFIG_HAVE_GENERIC_DMA_COHERENT 1
-#define CONFIG_DEBUG_VM 1
 #define CONFIG_INPUT_EVDEV 1
 #define CONFIG_ARCH_MSM 1
 #define CONFIG_BLOCK 1
@@ -273,14 +323,23 @@
 #define CONFIG_ENABLE_WARN_DEPRECATED 1
 #define CONFIG_WIRELESS 1
 #define CONFIG_NETFILTER_XT_MATCH_OWNER 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_IP_ADVANCED_ROUTER 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_TIMER_STATS 1
+#define CONFIG_MEDIA_TUNER_CUSTOMIZE 1
 #define CONFIG_YAFFS_SHORT_NAMES_IN_RAM 1
 #define CONFIG_KALLSYMS 1
 #define CONFIG_YAFFS_FS 1
 #define CONFIG_HID_SUPPORT 1
 #define CONFIG_NEW_LEDS 1
 #define CONFIG_LEDS_TRIGGER_SLEEP 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_IPV6_SIT 1
+=======
+#define CONFIG_IPV6_SIT_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_PROC_SYSCTL 1
 #define CONFIG_RTC_HCTOSYS 1
 #define CONFIG_I2C_HELPER_AUTO 1
@@ -291,7 +350,11 @@
 #define CONFIG_MMC_BLOCK_DEFERRED_RESUME 1
 #define CONFIG_TOUCHSCREEN_MELFAS_I2C 1
 #define CONFIG_INET_ESP 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_MACH_DESIREC 1
+=======
+#define CONFIG_NF_NAT_PPTP 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_MSM7X00A_SLEEP_MODE 0
 #define CONFIG_SHMEM 1
 #define CONFIG_LEDS_TRIGGER_TIMER 1
@@ -299,8 +362,9 @@
 #define CONFIG_EPOLL 1
 #define CONFIG_CRYPTO_AEAD2 1
 #define CONFIG_UID_STAT 1
+#define CONFIG_MEDIA_TUNER_TDA827X 1
+#define CONFIG_IP_MULTIPLE_TABLES 1
 #define CONFIG_ZBOOT_ROM_TEXT 0x0
-#define CONFIG_USB_FUNCTION_MODEM 1
 #define CONFIG_NLS_CODEPAGE_437 1
 #define CONFIG_PPP_MPPE 1
 #define CONFIG_MSM_DEBUG_UART3 1
@@ -318,7 +382,7 @@
 #define CONFIG_FILE_LOCKING 1
 #define CONFIG_USB_FUNCTION_ETHER 1
 #define CONFIG_USB_SUPPORT 1
-#define CONFIG_NETFILTER_XT_MATCH_HASHLIMIT 1
+#define CONFIG_NETFILTER_XT_MATCH_HASHLIMIT_MODULE 1
 #define CONFIG_NETFILTER_XT_MATCH_CONNTRACK 1
 #define CONFIG_FB_EARLYSUSPEND 1
 #define CONFIG_CPU_CACHE_V6 1
@@ -326,9 +390,11 @@
 #define CONFIG_DEBUG_KERNEL 1
 #define CONFIG_HARDIRQS_SW_RESEND 1
 #define CONFIG_FB 1
+#define CONFIG_MEDIA_TUNER_TDA18271 1
 #define CONFIG_OPROFILE_ARM11_CORE 1
 #define CONFIG_TMPFS 1
 #define CONFIG_LEDS_TRIGGER_HEARTBEAT 1
+#define CONFIG_ASK_IP_FIB_HASH 1
 #define CONFIG_GENERIC_TIME 1
 #define CONFIG_GENERIC_GPIO 1
 #define CONFIG_CRYPTO_TWOFISH_COMMON 1
@@ -337,7 +403,11 @@
 #define CONFIG_PLIST 1
 #define CONFIG_FUTEX 1
 #define CONFIG_IP_NF_MATCH_ECN 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_IPCOMP 1
+=======
+#define CONFIG_INET6_IPCOMP_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_USB_FUNCTION_RNDIS 1
 #define CONFIG_MISC_DEVICES 1
 #define CONFIG_CPU_CP15_MMU 1
@@ -358,6 +428,7 @@
 #define CONFIG_CPU_FREQ_MIN_TICKS 1
 #define CONFIG_CRYPTO_HASH2 1
 #define CONFIG_BT 1
+#define CONFIG_NETFILTER_XT_TARGET_CONNMARK 1
 #define CONFIG_NF_CONNTRACK 1
 #define CONFIG_CGROUP_DEBUG 1
 #define CONFIG_MSM_RMNET_DEBUG 1
@@ -373,18 +444,32 @@
 #define CONFIG_INPUT_CAPELLA_CM3602 1
 #define CONFIG_NETFILTER_XT_MATCH_STATISTIC 1
 #define CONFIG_NETFILTER_XT_TARGET_CLASSIFY 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_TUNNEL 1
+=======
+#define CONFIG_INET6_TUNNEL_MODULE 1
+#define CONFIG_NET_ACT_GACT 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_HIGH_RES_TIMERS 1
 #define CONFIG_BUILD_OMA_DM 1
 #define CONFIG_NETFILTER_XT_MATCH_U32 1
 #define CONFIG_PM 1
 #define CONFIG_GENERIC_CLOCKEVENTS 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_NET_SCH_INGRESS 1
+#define CONFIG_IPV6_ROUTE_INFO 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_NO_HZ 1
 #define CONFIG_LOCKDEP_SUPPORT 1
 #define CONFIG_MSDOS_PARTITION 1
 #define CONFIG_FB_CFB_IMAGEBLIT 1
 #define CONFIG_EARLYSUSPEND 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_IPV6_MIP6 1
+=======
+#define CONFIG_IPV6_MIP6_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_CPU_ABRT_EV6 1
 #define CONFIG_CGROUP_BFQIO 1
 #define CONFIG_VECTORS_BASE 0xffff0000
@@ -393,11 +478,20 @@
 #define CONFIG_HZ 100
 #define CONFIG_NETFILTER_XT_MATCH_HELPER 1
 #define CONFIG_CPU_HAS_ASID 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_BCM4329 1
+=======
+#define CONFIG_NETFILTER_XT_MATCH_RECENT 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_NLS_ISO8859_1 1
 #define CONFIG_SMC91X 1
 #define CONFIG_NET_ETHERNET 1
 #define CONFIG_NETFILTER_XT_MATCH_LENGTH 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_HID_APPLE 1
+#define CONFIG_TOUCHSCREEN_DUPLICATED_FILTER 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_REED_SOLOMON 1
 #define CONFIG_MMC_BLOCK 1
 #define CONFIG_SSB_POSSIBLE 1
@@ -408,11 +502,19 @@
 #define CONFIG_IP_NF_MATCH_TTL 1
 #define CONFIG_MSM_CPU_FREQ_ONDEMAND_MAX 528000
 #define CONFIG_ANDROID_LOW_MEMORY_KILLER 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_APANIC 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_NETFILTER_XT_TARGET_TRACE 1
 #define CONFIG_CPU_32 1
 #define CONFIG_RWSEM_GENERIC_SPINLOCK 1
 #define CONFIG_NETFILTER 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_ESP 1
+=======
+#define CONFIG_INET6_ESP_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_BASE_FULL 1
 #define CONFIG_CRC_CCITT 1
 #define CONFIG_USB_FUNCTION 1
@@ -429,7 +531,12 @@
 #define CONFIG_GENERIC_CALIBRATE_DELAY 1
 #define CONFIG_ANDROID_RAM_CONSOLE 1
 #define CONFIG_HAS_IOMEM 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_INET6_XFRM_MODE_TRANSPORT 1
+=======
+#define CONFIG_INET6_XFRM_MODE_TRANSPORT_MODULE 1
+#define CONFIG_NETFILTER_XT_MATCH_POLICY 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_NETFILTER_XT_MATCH_MULTIPORT 1
 #define CONFIG_NETFILTER_XT_TARGET_NFLOG 1
 #define CONFIG_FW_LOADER 1
@@ -443,11 +550,17 @@
 #define CONFIG_MODULE_FORCE_UNLOAD 1
 #define CONFIG_PACKET 1
 #define CONFIG_BT_RFCOMM 1
-#define CONFIG_FS_POSIX_ACL 1
+#define CONFIG_DEBUG_BUGVERBOSE 1
 #define CONFIG_NETFILTER_XT_MATCH_STRING 1
+#define CONFIG_NF_CT_PROTO_GRE 1
 #define CONFIG_GENERIC_HARDIRQS 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_APANIC_PLABEL "kpanic"
 #define CONFIG_INET6_XFRM_MODE_TUNNEL 1
+=======
+#define CONFIG_APANIC_PLABEL "crashdata"
+#define CONFIG_INET6_XFRM_MODE_TUNNEL_MODULE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_FIB_RULES 1
 #define CONFIG_ASHMEM 1
 #define CONFIG_IPV6_NDISC_NODETYPE 1
@@ -477,11 +590,15 @@
 #define CONFIG_MSM7X00A_SLEEP_NO_LIMIT 1
 #define CONFIG_JBD 1
 #define CONFIG_USB_ARCH_HAS_HCD 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_BCM4329_SOFTAP 1
+=======
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_DEFAULT_TCP_CONG "cubic"
 #define CONFIG_SWITCH 1
 #define CONFIG_MSM_RMNET 1
 #define CONFIG_FAT_FS 1
+#define CONFIG_NF_CONNTRACK_IRC 1
 #define CONFIG_MSM7X00A_SLEEP_LIMIT 0
 #define CONFIG_CPU_V6 1
 #define CONFIG_FB_MSM 1
@@ -499,7 +616,11 @@
 #define CONFIG_BT_SCO 1
 #define CONFIG_NF_NAT_NEEDED 1
 #define CONFIG_HAS_EARLYSUSPEND 1
+<<<<<<< HEAD:include/linux/autoconf.h
 #define CONFIG_FS_MBCACHE 1
+=======
+#define CONFIG_CPU_FREQ_GOV_POWERSAVE 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_ARCH_HAS_HOLES_MEMORYMODEL 1
 #define CONFIG_MMC 1
 #define CONFIG_INITRAMFS_SOURCE ""
@@ -515,6 +636,7 @@
 #define CONFIG_BT_HCIUART_H4 1
 #define CONFIG_ARM 1
 #define CONFIG_NETWORK_FILESYSTEMS 1
+#define CONFIG_NF_CONNTRACK_SIP 1
 #define CONFIG_CRYPTO 1
 #define CONFIG_SYSCTL 1
 #define CONFIG_DEBUG_PREEMPT 1
@@ -529,6 +651,11 @@
 #define CONFIG_MODULE_UNLOAD 1
 #define CONFIG_STANDALONE 1
 #define CONFIG_TEXTSEARCH_BM 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_NETFILTER_XT_MATCH_IPRANGE 1
+#define CONFIG_MACH_HEROC 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_NETDEVICES 1
 #define CONFIG_FRAME_POINTER 1
 #define CONFIG_WAKELOCK_STAT 1
@@ -542,15 +669,17 @@
 #define CONFIG_MTD_CFI_I2 1
 #define CONFIG_PPP 1
 #define CONFIG_DEBUG_MUTEXES 1
+<<<<<<< HEAD:include/linux/autoconf.h
+=======
+#define CONFIG_IPV6_PIMSM_V2 1
+#define CONFIG_IPV6_SUBTREES 1
+>>>>>>> fbe57d6... Patch up to .330 for shits and giggles:include/linux/autoconf.h
 #define CONFIG_IPV6_ROUTER_PREF 1
 #define CONFIG_PANIC_TIMEOUT 5
-#define CONFIG_DEBUG_INFO 1
-#define CONFIG_EXT2_FS_SECURITY 1
 #define CONFIG_ANDROID_RAM_CONSOLE_ERROR_CORRECTION 1
 #define CONFIG_SENSORS_BMA150 1
 #define CONFIG_MSM_ONCRPCROUTER 1
 #define CONFIG_IOSCHED_AS 1
-#define CONFIG_EXT3_FS_SECURITY 1
 #define CONFIG_IP_NF_TARGET_LOG 1
 #define CONFIG_BASE_SMALL 0
 #define CONFIG_MMC_EMBEDDED_SDIO 1
@@ -559,12 +688,15 @@
 #define CONFIG_NETFILTER_XT_MATCH_COMMENT 1
 #define CONFIG_BINFMT_ELF 1
 #define CONFIG_MSM7X00A_IDLE_SLEEP_MODE 1
+#define CONFIG_TUN 1
 #define CONFIG_HID_COMPAT 1
 #define CONFIG_IP_NF_TARGET_MASQUERADE 1
 #define CONFIG_BITREVERSE 1
+#define CONFIG_NETFILTER_XT_MATCH_RATEEST 1
 #define CONFIG_TEXTSEARCH 1
 #define CONFIG_LOG_BUF_SHIFT 17
 #define CONFIG_BT_HCIUART_LL 1
+#define CONFIG_IP_ROUTE_VERBOSE 1
 #define CONFIG_CMDLINE "mem=64M console=ttyMSM,115200n8"
 #define CONFIG_LEDS_CLASS 1
 #define CONFIG_NETFILTER_XT_MATCH_DCCP 1
