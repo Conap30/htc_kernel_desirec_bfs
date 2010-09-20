@@ -135,7 +135,7 @@ static inline void sg_inc_cpu_power(struct sched_group *sg, u32 val)
  * Value is in ms and set to a minimum of 6ms. Scales with number of cpus.
  * Tunable via /proc interface.
  */
-int rr_interval __read_mostly = 6;
+int rr_interval __read_mostly = 1;
 
 /*
  * sched_iso_cpu - sysctl which determines the cpu percentage SCHED_ISO tasks
