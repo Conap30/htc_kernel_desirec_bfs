@@ -2709,7 +2709,7 @@ asmlinkage void __sched preempt_schedule(void)
 
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
-		__schedule();
+		schedule();
 		sub_preempt_count(PREEMPT_ACTIVE);
 
 		/*
@@ -2737,7 +2737,7 @@ asmlinkage void __sched preempt_schedule_irq(void)
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
 		local_irq_enable();
-		__schedule();
+		schedule();
 		local_irq_disable();
 		sub_preempt_count(PREEMPT_ACTIVE);
 
@@ -3852,7 +3852,7 @@ SYSCALL_DEFINE0(sched_yield)
 	_raw_spin_unlock(&grq.lock);
 	preempt_enable_no_resched();
 
-	__schedule();
+	schedule();
 
 	return 0;
 }
@@ -3877,7 +3877,7 @@ static void __cond_resched(void)
 	 */
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
-		__schedule();
+		schedule();
 		sub_preempt_count(PREEMPT_ACTIVE);
 	} while (need_resched());
 }
@@ -3958,7 +3958,7 @@ void __sched io_schedule(void)
 
 	delayacct_blkio_start();
 	atomic_inc(&rq->nr_iowait);
-	__schedule();
+	schedule();
 	atomic_dec(&rq->nr_iowait);
 	delayacct_blkio_end();
 }
