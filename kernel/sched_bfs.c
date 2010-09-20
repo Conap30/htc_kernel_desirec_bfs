@@ -2533,15 +2533,12 @@ static void reset_rq_task(struct rq *rq, struct task_struct *p)
 /*
  * schedule() is the main scheduler function.
  */
-asmlinkage void __sched schedule(void)
+asmlinkage void __sched __schedule(void)
 {
 	struct task_struct *prev, *next, *idle;
 	unsigned long *switch_count;
 	int deactivate, cpu;
 	struct rq *rq;
-
-need_resched:
-	preempt_disable();
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
@@ -2626,6 +2623,13 @@ need_resched_nonpreemptible:
 
 	if (unlikely(reacquire_kernel_lock(current) < 0))
 		goto need_resched_nonpreemptible;
+}
+
+asmlinkage void __sched schedule(void)
+{
+need_resched:
+ preempt_disable();
+ __schedule();
 	preempt_enable_no_resched();
 	if (need_resched())
 		goto need_resched;
@@ -2705,7 +2709,7 @@ asmlinkage void __sched preempt_schedule(void)
 
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
-		schedule();
+		__schedule();
 		sub_preempt_count(PREEMPT_ACTIVE);
 
 		/*
@@ -2733,7 +2737,7 @@ asmlinkage void __sched preempt_schedule_irq(void)
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
 		local_irq_enable();
-		schedule();
+		__schedule();
 		local_irq_disable();
 		sub_preempt_count(PREEMPT_ACTIVE);
 
@@ -3848,7 +3852,7 @@ SYSCALL_DEFINE0(sched_yield)
 	_raw_spin_unlock(&grq.lock);
 	preempt_enable_no_resched();
 
-	schedule();
+	__schedule();
 
 	return 0;
 }
@@ -3873,7 +3877,7 @@ static void __cond_resched(void)
 	 */
 	do {
 		add_preempt_count(PREEMPT_ACTIVE);
-		schedule();
+		__schedule();
 		sub_preempt_count(PREEMPT_ACTIVE);
 	} while (need_resched());
 }
@@ -3954,7 +3958,7 @@ void __sched io_schedule(void)
 
 	delayacct_blkio_start();
 	atomic_inc(&rq->nr_iowait);
-	schedule();
+	__schedule();
 	atomic_dec(&rq->nr_iowait);
 	delayacct_blkio_end();
 }
