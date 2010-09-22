@@ -2143,7 +2143,7 @@ static inline void no_iso_tick(void)
 	if (grq.iso_ticks) {
 		grq_lock();
 		grq.iso_ticks -= grq.iso_ticks / ISO_PERIOD + 1;
-		if (unlikely(grq.iso_refractory && grq.iso_ticks <
+		if (unlikely(grq.iso_refractory && grq.iso_ticks /
 		    ISO_PERIOD < (sched_iso_cpu * 90 / 100)))
 			clear_iso_refractory();
 		grq_unlock();
@@ -2210,7 +2210,6 @@ void scheduler_tick(void)
 	sched_clock_tick();
 	update_rq_clock(rq);
 	update_cpu_clock(rq, rq->curr, 1);
-	update_gjiffies();
 	if (!rq_idle(rq))
 		task_running_tick(rq);
 	else
@@ -2370,6 +2369,15 @@ retry:
 
 		dl = p->deadline + cache_distance(task_rq(p), rq, p);
 
+		/*
+		 * Look for tasks with old deadlines and pick them in FIFO
+		 * order, taking the first one found.
+		 */
+		if (time_is_before_jiffies(dl)) {
+		  edt = p;
+		  goto out_take;
+
+		}
 		/*
 		 * No rt tasks. Find the earliest deadline task. Now we're in
 		 * O(n) territory. This is what we silenced the compiler for:
